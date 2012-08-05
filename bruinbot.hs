@@ -24,6 +24,7 @@ Control.OldException
 import Control.OldException
 import Text.Printf
 import Prelude hiding (catch)
+import Data.String.Utils
  
 server = "irc.freenode.org"
 port   = 6667
@@ -93,7 +94,27 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval     _                     = return () -- ignore everything else
+-- eval     _                     = return () -- ignore everything else
+eval     _                     = parse ( _ ) >>= privmsg
+
+-- Parsing function
+parse :: String -> String
+parse stg = do
+  stripped_string = strip( stg )
+  split_string = splitWs( stripped_string )
+  return( search_string( split_string )
+
+
+search_string :: [String] -> String
+search_string (x:xs) =
+  if startswith "http://" x 
+    return(x)
+  else do
+    if startswith "www." x
+      return(x)
+    else do
+      search_string( xs )
+  
  
 --
 -- Send a privmsg to the current chan + server
