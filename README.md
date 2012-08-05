@@ -4,8 +4,8 @@
 # BUILD
 A simple, clean IRC bot in Haskell
 
-   $ make
-   $ ./bruinbot
+    $ make
+    $ ./bruinbot
 
 or
 
