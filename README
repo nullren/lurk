@@ -1,18 +1,12 @@
-TODO:
+# TODO
+   - everything
 
-  * everything
-
-BUILD:
+# BUILD
 A simple, clean IRC bot in Haskell
 
- $ ghc -O --make -o bot bot.hs
- $ ./bot
-or
- $ runhaskell bot.hs
-or
- $ echo main | ghci bot.hs
-or
- $ echo main | hugs -98 bot.hs
-or
- $ runhugs -98 bot.hs
+   $ make
+   $ ./bruinbot
 
+or
+
+    $ runhaskell ./bruinbot.hs

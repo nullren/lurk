@@ -1,5 +1,5 @@
 all:
-	ghc -O -o bruinbot bruinbot.hs
+	ghc -O --make -o bruinbot bruinbot.hs
 
 clean:
 	rm bruinbot.o
