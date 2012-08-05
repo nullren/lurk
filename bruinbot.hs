@@ -19,8 +19,7 @@ import System.IO
 import System.Time
 import System.Exit
 import Control.Monad.Reader
--- import Control.Exception -- for base-3, with base-4 use
-Control.OldException
+-- import Control.Exception -- for base-3, with base-4 use Control.OldException
 import Control.OldException
 import Text.Printf
 import Prelude hiding (catch)
