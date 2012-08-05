@@ -4,15 +4,13 @@ import System.IO
 import System.Time
 import System.Exit
 import Control.Monad.Reader
-import Control.OldException
+import qualified Control.Exception as E
 import Text.Printf 
-import Text.HTML.TagSoup
-import Prelude hiding (catch)
 import Bruinbot.Url
  
 irc_server = "irc.freenode.org"
 irc_port   = 6667
-irc_chan   = "#avocadobottest"
+irc_chan   = "#reddit-ucla"
 irc_nick   = "bruinbot"
  
 --
@@ -26,10 +24,10 @@ data Bot = Bot { socket :: Handle, starttime :: ClockTime }
 -- Set up actions to run on start and end, and run the main loop
 --
 main :: IO ()
-main = bracket connect disconnect loop
+main = E.bracket connect disconnect loop
   where
     disconnect = hClose . socket
-    loop st    = catch (runReaderT run st) (const $ return ())
+    loop st    = E.catch (runReaderT run st) (\(E.SomeException _) -> return ())
  
 --
 -- Connect to the server and return the initial bot state
@@ -41,7 +39,7 @@ connect = notify $ do
     hSetBuffering h NoBuffering
     return (Bot h t)
   where
-    notify a = bracket_
+    notify a = E.bracket_
         (printf "Connecting to %s ... " irc_server >> hFlush stdout)
         (putStrLn "done.")
         a
