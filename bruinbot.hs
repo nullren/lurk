@@ -101,7 +101,7 @@ parse :: String -> String
 parse stg = do
   stripped_string = strip( stg )
   split_string = words( stripped_string )
-  return( filter (\x -> "http://" 'isPrefixOf' $ words ) )
+  return( filter (\x -> "http://" 'isPrefixOf' $ split_string ) )
 
 
 
