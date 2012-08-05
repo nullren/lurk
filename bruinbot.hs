@@ -130,4 +130,7 @@ io = liftIO
 -- Parse urls from a string
 --
 getUrls :: String -> [String]
-getUrls s = filter (\x -> "http://" `isPrefixOf` x) $ words s
+getUrls s = 
+  let http = filter (\x -> "http://" `isPrefixOf` x) $ words s
+      https = filter (\x -> "https://" `isPrefixOf` x) $ words s
+  in http ++ https
