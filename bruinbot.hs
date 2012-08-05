@@ -13,8 +13,11 @@
 --  $ runhugs -98 bot.hs
 --
  
+import Data.Char
 import Data.List
+--import Data.String.Utils
 import Network
+import Network.HTTP
 import System.IO
 import System.Time
 import System.Exit
@@ -22,13 +25,13 @@ import Control.Monad.Reader
 -- import Control.Exception -- for base-3, with base-4 use Control.OldException
 import Control.OldException
 import Text.Printf
+import Text.HTML.TagSoup
 import Prelude hiding (catch)
-import Data.String.Utils
  
-server = "irc.freenode.org"
-port   = 6667
-chan   = "#reddit-ucla"
-nick   = "bruinbot"
+irc_server = "irc.freenode.org"
+irc_port   = 6667
+irc_chan   = "#reddit-ucla"
+irc_nick   = "bruinbot"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -52,12 +55,12 @@ main = bracket connect disconnect loop
 connect :: IO Bot
 connect = notify $ do
     t <- getClockTime
-    h <- connectTo server (PortNumber (fromIntegral port))
+    h <- connectTo irc_server (PortNumber (fromIntegral irc_port))
     hSetBuffering h NoBuffering
     return (Bot h t)
   where
     notify a = bracket_
-        (printf "Connecting to %s ... " server >> hFlush stdout)
+        (printf "Connecting to %s ... " irc_server >> hFlush stdout)
         (putStrLn "done.")
         a
  
@@ -67,9 +70,9 @@ connect = notify $ do
 --
 run :: Net ()
 run = do
-    write "NICK" nick
-    write "USER" (nick++" 0 * :tutorial bot")
-    write "JOIN" chan
+    write "NICK" irc_nick
+    write "USER" (irc_nick++" 0 * :tutorial bot")
+    write "JOIN" irc_chan
     asks socket >>= listen
  
 --
@@ -93,35 +96,14 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
--- eval     _                     = return () -- ignore everything else
-eval     _                     = parse ( _ ) >>= privmsg
+eval x | urls@(_:_) <- getURLs x = spitURLTitles urls
+eval     _                     = return () -- ignore everything else
 
--- Parsing function
-parse :: String -> String
-parse stg = do
-  stripped_string = strip( stg )
-  split_string = words( stripped_string )
-  return( filter (\x -> "http://" 'isPrefixOf' $ split_string ) )
-
-
-
-
-{-search_string :: [String] -> String-}
-{-search_string (x:xs) = do-}
-  {-if startswith "http://" x -}
-    {-return(x)-}
-  {-else do-}
-    {-if startswith "www." x-}
-      {-return(x)-}
-    {-else do-}
-      {-search_string( xs )-}
-  
- 
 --
 -- Send a privmsg to the current chan + server
 --
 privmsg :: String -> Net ()
-privmsg s = write "PRIVMSG" (chan ++ " :" ++ s)
+privmsg s = write "PRIVMSG" (irc_chan ++ " :" ++ s)
  
 --
 -- Send a message out to the server we're currently connected to
@@ -161,3 +143,23 @@ pretty td = join . intersperse " " . filter (not . null) . map f $
 --
 io :: IO a -> Net a
 io = liftIO
+
+-- Parsing function
+getURLs :: String -> [String]
+getURLs s = filter (\x -> "http://" `isPrefixOf` x) $ words s
+
+spitURLTitles :: [String] -> Net ()
+spitURLTitles [] = return ()
+spitURLTitles (url:urls) = do
+  printPageTitle url
+  spitURLTitles urls
+
+
+printPageTitle :: String -> Net ()
+printPageTitle url = do
+    let openURL x = getResponseBody =<< simpleHTTP (getRequest x)
+    tags <- fmap parseTags $ openURL url
+    let title = fromTagText (dropWhile (~/= "<title>") tags !! 1)
+    privmsg title
+    --putStrLn title
+
