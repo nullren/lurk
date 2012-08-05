@@ -2,8 +2,8 @@ import Data.Char
 import Data.List
 --import Data.String.Utils
 import Network
-import Network.Browser
 import Network.HTTP
+import Network.Browser
 import System.IO
 import System.Time
 import System.Exit
@@ -16,7 +16,7 @@ import Prelude hiding (catch)
  
 irc_server = "irc.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla"
+irc_chan   = "#avocadobottest"
 irc_nick   = "bruinbot"
  
 --
@@ -57,7 +57,7 @@ connect = notify $ do
 run :: Net ()
 run = do
     write "NICK" irc_nick
-    write "USER" (irc_nick++" 0 * :tutorial bot")
+    write "USER" (irc_nick++" 0 * :ucla irc bot")
     write "JOIN" irc_chan
     asks socket >>= listen
  
@@ -82,10 +82,10 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x) >>= privmsg
---eval x | urls@(_:_) <- getUrls x = spitUrlTitles urls
+eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
+                                       title <- io $ getUrlTitle x;
+                                       privmsg ("title: " ++ title); }) urls
 eval     _                     = return () -- ignore everything else
-
 
 --
 -- Send a privmsg to the current chan + server
@@ -132,26 +132,21 @@ pretty td = join . intersperse " " . filter (not . null) . map f $
 io :: IO a -> Net a
 io = liftIO
 
--- Parsing function
+--
+-- Parse urls from a string
+--
 getUrls :: String -> [String]
 getUrls s = filter (\x -> "http://" `isPrefixOf` x) $ words s
 
-grabUrl :: String -> IO String
-grabUrl url = do 
-      (_,rsp) <- Network.Browser.browse $ do
-               setAllowRedirects True -- handle HTTP redirects
-               request $ getRequest url
-      return (getResponseBody rsp)
-
-printPageTitle :: String -> String
-printPageTitle url = do
-    tags <- fmap parseTags $ grabUrl url
-    return . fromTagText (dropWhile (~/= "<title>") tags !! 1)
-
-{- removing for now
-spitUrlTitles :: [String] -> Net ()
-spitUrlTitles [] = return ()
-spitUrlTitles (url:urls) = do
-  printPageTitle url
-  spitUrlTitles urls
--}
+--
+-- Get the page title of a url
+--
+getUrlTitle :: String -> IO String
+getUrlTitle url = do
+  (_, rsp) <- browse $ do
+                --setErrHandler $ const (return ())
+                --setOutHandler $ const (return ())
+                setAllowRedirects True
+                request $ getRequest url
+  let tags = parseTags $ rspBody rsp
+  return (fromTagText (dropWhile (~/= "<title>") tags !! 1))

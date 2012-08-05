@@ -1,14 +1,16 @@
-import Data.Char
-import Data.List
 import Network.HTTP
+import Network.Browser
 import Text.HTML.TagSoup
 
+main = do
+  title <- getUrlTitle "http://tinyurl.com/8cp69mv"
+  putStrLn title
 
-main = printPageTitle "http://imgur.com"
-
-printPageTitle :: String -> IO ()
-printPageTitle url = do
-    let openURL x = getResponseBody =<< simpleHTTP (getRequest x)
-    tags <- fmap parseTags $ openURL url
-    let title = fromTagText (dropWhile (~/= "<title>") tags !! 1)
-    putStrLn title
+getUrlTitle url = do
+  (_, rsp) <- browse $ do
+                --setErrHandler $ const (return ())
+                --setOutHandler $ const (return ())
+                setAllowRedirects True
+                request $ getRequest url
+  let tags = parseTags $ rspBody rsp
+  return (fromTagText (dropWhile (~/= "<title>") tags !! 0))
