@@ -2,6 +2,7 @@ import Data.Char
 import Data.List
 --import Data.String.Utils
 import Network
+import Network.Browser
 import Network.HTTP
 import System.IO
 import System.Time
@@ -81,9 +82,10 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x)
---eval x | urls@(_:_) <- getURLs x = spitURLTitles urls
+eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x) >>= privmsg
+--eval x | urls@(_:_) <- getUrls x = spitUrlTitles urls
 eval     _                     = return () -- ignore everything else
+
 
 --
 -- Send a privmsg to the current chan + server
@@ -131,22 +133,25 @@ io :: IO a -> Net a
 io = liftIO
 
 -- Parsing function
-getURLs :: String -> [String]
-getURLs s = filter (\x -> "http://" `isPrefixOf` x) $ words s
+getUrls :: String -> [String]
+getUrls s = filter (\x -> "http://" `isPrefixOf` x) $ words s
+
+grabUrl :: String -> IO String
+grabUrl url = do 
+      (_,rsp) <- Network.Browser.browse $ do
+               setAllowRedirects True -- handle HTTP redirects
+               request $ getRequest url
+      return (getResponseBody rsp)
+
+printPageTitle :: String -> String
+printPageTitle url = do
+    tags <- fmap parseTags $ grabUrl url
+    return . fromTagText (dropWhile (~/= "<title>") tags !! 1)
 
 {- removing for now
-spitURLTitles :: [String] -> Net ()
-spitURLTitles [] = return ()
-spitURLTitles (url:urls) = do
+spitUrlTitles :: [String] -> Net ()
+spitUrlTitles [] = return ()
+spitUrlTitles (url:urls) = do
   printPageTitle url
-  spitURLTitles urls
+  spitUrlTitles urls
 -}
-
-printPageTitle :: String -> Net ()
-printPageTitle url = do
-    let openURL x = getResponseBody =<< simpleHTTP (getRequest x)
-    tags <- fmap parseTags $ openURL url
-    let title = fromTagText (dropWhile (~/= "<title>") tags !! 1)
-    privmsg title
-    --putStrLn title
-
