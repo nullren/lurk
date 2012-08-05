@@ -1,7 +1,5 @@
 import Data.List
 import Network
-import Network.HTTP
-import Network.Browser
 import System.IO
 import System.Time
 import System.Exit
@@ -10,10 +8,11 @@ import Control.OldException
 import Text.Printf 
 import Text.HTML.TagSoup
 import Prelude hiding (catch)
+import Bruinbot.Url
  
 irc_server = "irc.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla"
+irc_chan   = "#avocadobottest"
 irc_nick   = "bruinbot"
  
 --
@@ -80,8 +79,8 @@ eval     "!uptime"               = uptime >>= privmsg
 eval     "!quit"                 = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x   = privmsg (drop 4 x)
 eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
-                                       title <- io $ getUrlTitle x;
-                                       privmsg ("Title: " ++ title); }) urls
+                                       title <- io $ getTitle x;
+                                       privmsg title; }) urls
 eval     _                       = return () -- ignore everything else
 
 --
@@ -134,16 +133,3 @@ io = liftIO
 --
 getUrls :: String -> [String]
 getUrls s = filter (\x -> "http://" `isPrefixOf` x) $ words s
-
---
--- Get the page title of a url
---
-getUrlTitle :: String -> IO String
-getUrlTitle url = do
-  (_, rsp) <- browse $ do
-                --setErrHandler $ const (return ())
-                --setOutHandler $ const (return ())
-                setAllowRedirects True
-                request $ getRequest url
-  let tags = parseTags $ rspBody rsp
-  return (fromTagText (dropWhile (~/= "<title>") tags !! 1))
