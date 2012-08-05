@@ -1,6 +1,4 @@
-import Data.Char
 import Data.List
---import Data.String.Utils
 import Network
 import Network.HTTP
 import Network.Browser
@@ -8,15 +6,14 @@ import System.IO
 import System.Time
 import System.Exit
 import Control.Monad.Reader
--- import Control.Exception -- for base-3, with base-4 use Control.OldException
 import Control.OldException
-import Text.Printf
+import Text.Printf 
 import Text.HTML.TagSoup
 import Prelude hiding (catch)
  
 irc_server = "irc.freenode.org"
 irc_port   = 6667
-irc_chan   = "#avocadobottest"
+irc_chan   = "#reddit-ucla"
 irc_nick   = "bruinbot"
  
 --
@@ -79,13 +76,13 @@ listen h = forever $ do
 -- Dispatch a command
 --
 eval :: String -> Net ()
-eval     "!uptime"             = uptime >>= privmsg
-eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
-eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
+eval     "!uptime"               = uptime >>= privmsg
+eval     "!quit"                 = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
+eval x | "!id " `isPrefixOf` x   = privmsg (drop 4 x)
 eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
                                        title <- io $ getUrlTitle x;
-                                       privmsg ("title: " ++ title); }) urls
-eval     _                     = return () -- ignore everything else
+                                       privmsg ("Title: " ++ title); }) urls
+eval     _                       = return () -- ignore everything else
 
 --
 -- Send a privmsg to the current chan + server
