@@ -96,7 +96,8 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | urls@(_:_) <- getURLs x = spitURLTitles urls
+eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x)
+--eval x | urls@(_:_) <- getURLs x = spitURLTitles urls
 eval     _                     = return () -- ignore everything else
 
 --
@@ -153,7 +154,6 @@ spitURLTitles [] = return ()
 spitURLTitles (url:urls) = do
   printPageTitle url
   spitURLTitles urls
-
 
 printPageTitle :: String -> Net ()
 printPageTitle url = do
