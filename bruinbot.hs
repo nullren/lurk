@@ -100,19 +100,21 @@ eval     _                     = parse ( _ ) >>= privmsg
 parse :: String -> String
 parse stg = do
   stripped_string = strip( stg )
-  split_string = splitWs( stripped_string )
-  return( search_string( split_string )
+  split_string = words( stripped_string )
+  return( filter (\x -> "http://" 'isPrefixOf' $ words ) )
 
 
-search_string :: [String] -> String
-search_string (x:xs) =
-  if startswith "http://" x 
-    return(x)
-  else do
-    if startswith "www." x
-      return(x)
-    else do
-      search_string( xs )
+
+
+{-search_string :: [String] -> String-}
+{-search_string (x:xs) = do-}
+  {-if startswith "http://" x -}
+    {-return(x)-}
+  {-else do-}
+    {-if startswith "www." x-}
+      {-return(x)-}
+    {-else do-}
+      {-search_string( xs )-}
   
  
 --
