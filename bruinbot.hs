@@ -1,18 +1,3 @@
---
--- A simple, clean IRC bot in Haskell
---
---  $ ghc -O --make -o bot bot.hs
---  $ ./bot
--- or
---  $ runhaskell bot.hs
--- or
---  $ echo main | ghci bot.hs
--- or
---  $ echo main | hugs -98 bot.hs
--- or
---  $ runhugs -98 bot.hs
---
- 
 import Data.Char
 import Data.List
 --import Data.String.Utils
@@ -96,7 +81,7 @@ eval :: String -> Net ()
 eval     "!uptime"             = uptime >>= privmsg
 eval     "!quit"               = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x)
+--eval x | "!title " `isPrefixOf` x = printPageTitle (drop 7 x)
 --eval x | urls@(_:_) <- getURLs x = spitURLTitles urls
 eval     _                     = return () -- ignore everything else
 
@@ -149,6 +134,7 @@ io = liftIO
 getURLs :: String -> [String]
 getURLs s = filter (\x -> "http://" `isPrefixOf` x) $ words s
 
+{- removing for now
 spitURLTitles :: [String] -> Net ()
 spitURLTitles [] = return ()
 spitURLTitles (url:urls) = do
@@ -162,4 +148,5 @@ printPageTitle url = do
     let title = fromTagText (dropWhile (~/= "<title>") tags !! 1)
     privmsg title
     --putStrLn title
+-}
 
