@@ -12,8 +12,8 @@ import Bruinbot.IRC
  
 irc_server = "chat.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla-avocado"
-irc_nick   = "avobutt"
+irc_chan   = "#reddit-ucla"
+irc_nick   = "bruinbot"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
