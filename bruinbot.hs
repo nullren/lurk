@@ -80,13 +80,10 @@ write s t = do
 
 handle :: Message -> Net ()
 handle s = do
-  -- print message from server
   liftIO $ putStrLn (msgComplete s)
-
-  -- pick and action and act
-  case (msgCommand s) of
+  case msgCommand s of
     "PRIVMSG"     -> eval $ clean $ msgComplete s
-  return ()
+    _             -> return ()
 
 eval :: String -> Net ()
 eval     "!quit"                 = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
