@@ -1,3 +1,8 @@
+module Bruinbot.Curl (
+  getTitle
+) where
+
+import Data.List
 import Control.Monad.Reader
 import Network.Curl
 import Text.HTML.TagSoup
@@ -5,7 +10,11 @@ import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 
 
-url = "https://bitbucket.com"
+--url = "https://upload.wikimedia.org/wikipedia/commons/4/42/PIA15279_3rovers-stand_D2011_1215_D521.jpg"
+url = "https://google.com"
+
+main = do
+  getTitle url >>= putStrLn
 
 maxTitleLength :: Int
 maxTitleLength = 80
@@ -15,6 +24,20 @@ maxRedirectFollow = 5
 
 curl_options :: [CurlOption]
 curl_options = [CurlFollowLocation True, CurlMaxRedirs maxRedirectFollow, CurlHeader True]
+
+getTitle :: String -> IO String
+getTitle uri = do
+  t <- getContentType uri
+  if isHTML t then do
+    (_,c) <- curlGetString uri curl_options
+    case extractTitle c of
+      Nothing -> return ("File type: " ++ t )
+      Just title -> return title
+  else do
+    return ("File type: " ++ t )
+ where
+  isHTML t | "[text/html" `isPrefixOf` t = True
+  isHTML _                              = False
 
 extractTitle :: String -> Maybe String
 extractTitle = content . tags . decodeString where
@@ -26,18 +49,19 @@ extractTitle = content . tags . decodeString where
   maybeText [] = Nothing
   maybeText t = Just ("Title: " ++ take maxTitleLength (encodeString t))
 
-{-
--- print something like: [image/text] and file size
-getHdrDeets :: CurlResponse -> Maybe String
-getHdrDeets r = do
-  
-  case (findHeader HdrContentType r) of
-    Nothing -> fail "Given URL has no content type."
-    Just ct -> case (findHeader HdrContentLength r) of
-      Nothing -> fail "Given URL has no content."
-      Just cl -> return ("[" ++ ct ++ "] " ++ cl)
--}
-
-main = do
-  resp <- liftIO $ withCurlDo $ curlGetResponse_ url curl_options
-  putStrLn (show $ respHeaders resp)
+getContentType :: String -> IO String
+getContentType uri = do
+  a <- curlHead uri curl_options
+  t <- getContentTypeHdr a
+  l <- getContentLenHdr a
+  return $ ("[" ++ strip t ++ "] " ++ strip l )
+ where
+  getContentTypeHdr :: (String, [(String, String)]) -> IO String
+  getContentTypeHdr (_, h) = case lookup "Content-Type" h of
+    Just x -> return x
+    Nothing -> return "Oh god"
+  getContentLenHdr :: (String, [(String, String)]) -> IO String
+  getContentLenHdr (_, h) = case lookup "Content-Length" h of
+    Just x -> return x
+    Nothing -> return "Oh god"
+  strip = unwords . words

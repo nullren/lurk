@@ -7,7 +7,7 @@ import System.Exit
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
-import Bruinbot.Url
+import Bruinbot.Curl
 import Bruinbot.IRC
  
 irc_server = "chat.freenode.org"
