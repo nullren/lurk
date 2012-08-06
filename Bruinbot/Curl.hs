@@ -36,8 +36,7 @@ getTitle uri = do
   else do
     return ("File type: " ++ t )
  where
-  isHTML t | "[text/html" `isPrefixOf` t = True
-  isHTML _                              = False
+  isHTML t = "[text/html" `isPrefixOf` t
 
 extractTitle :: String -> Maybe String
 extractTitle = content . tags . decodeString where
