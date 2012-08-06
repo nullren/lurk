@@ -1,4 +1,5 @@
 import Data.List
+import Data.Maybe
 import Network
 import System.IO
 import System.Time
@@ -7,11 +8,12 @@ import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
 import Bruinbot.Url
+import Bruinbot.IRC
  
-irc_server = "irc.freenode.org"
+irc_server = "chat.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla"
-irc_nick   = "bruinbot"
+irc_chan   = "#reddit-ucla-avocado"
+irc_nick   = "avobutt"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -51,7 +53,7 @@ connect = notify $ do
 run :: Net ()
 run = do
     write "NICK" irc_nick
-    write "USER" (irc_nick++" 0 * :ucla irc bot")
+    write "USER" (irc_nick++" 0 * :avocado butt")
     write "JOIN" irc_chan
     asks socket >>= listen
  
@@ -60,32 +62,12 @@ run = do
 --
 listen :: Handle -> Net ()
 listen h = forever $ do
-    s <- init `fmap` io (hGetLine h)
-    io (putStrLn s)
-    if ping s then pong s else eval (clean s)
+    s <- init `fmap` liftIO (hGetLine h)
+    if ping s then pong s else handle (readExpr s)
   where
     forever a = a >> forever a
-    clean     = drop 1 . dropWhile (/= ':') . drop 1
     ping x    = "PING :" `isPrefixOf` x
     pong x    = write "PONG" (':' : drop 6 x)
- 
---
--- Dispatch a command
---
-eval :: String -> Net ()
-eval     "!uptime"               = uptime >>= privmsg
-eval     "!quit"                 = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
-eval x | "!id " `isPrefixOf` x   = privmsg (drop 4 x)
-eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
-                                       title <- io $ getTitle x;
-                                       privmsg title; }) urls
-eval     _                       = return () -- ignore everything else
-
---
--- Send a privmsg to the current chan + server
---
-privmsg :: String -> Net ()
-privmsg s = write "PRIVMSG" (irc_chan ++ " :" ++ s)
  
 --
 -- Send a message out to the server we're currently connected to
@@ -93,41 +75,32 @@ privmsg s = write "PRIVMSG" (irc_chan ++ " :" ++ s)
 write :: String -> String -> Net ()
 write s t = do
     h <- asks socket
-    io $ hPrintf h "%s %s\r\n" s t
-    io $ printf    "> %s %s\n" s t
- 
---
--- Calculate and pretty print the uptime
---
-uptime :: Net String
-uptime = do
-    now  <- io getClockTime
-    zero <- asks starttime
-    return . pretty $ diffClockTimes now zero
- 
---
--- Pretty print the date in '1d 9h 9m 17s' format
---
-pretty :: TimeDiff -> String
-pretty td = join . intersperse " " . filter (not . null) . map f $
-    [(years          ,"y") ,(months `mod` 12,"m")
-    ,(days   `mod` 28,"d") ,(hours  `mod` 24,"h")
-    ,(mins   `mod` 60,"m") ,(secs   `mod` 60,"s")]
-  where
-    secs    = abs $ tdSec td  ; mins   = secs   `div` 60
-    hours   = mins   `div` 60 ; days   = hours  `div` 24
-    months  = days   `div` 28 ; years  = months `div` 12
-    f (i,s) | i == 0    = []
-            | otherwise = show i ++ s
- 
---
--- Convenience.
---
-io :: IO a -> Net a
-io = liftIO
+    liftIO $ hPrintf h "%s %s\r\n" s t
+    liftIO $ printf    "> %s %s\n" s t
 
---
--- Parse urls from a string
---
+handle :: Message -> Net ()
+handle s = do
+  -- print message from server
+  liftIO $ putStrLn (msgComplete s)
+
+  -- pick and action and act
+  case (msgCommand s) of
+    "PRIVMSG"     -> eval $ clean $ msgComplete s
+  return ()
+
+eval :: String -> Net ()
+eval     "!quit"                 = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+eval x | "!id " `isPrefixOf` x   = privmsg (drop 4 x)
+eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
+                                       title <- liftIO $ getTitle x;
+                                       privmsg title; }) urls
+eval     _                       = return () -- ignore everything else
+
+privmsg :: String -> Net ()
+privmsg s = write "PRIVMSG" (irc_chan ++ " :" ++ s)
+
+clean :: String -> String
+clean = drop 1 . dropWhile (/= ':') . drop 1
+
 getUrls :: String -> [String]
 getUrls s = filter (\x -> "http://" `isPrefixOf` x) $ words s
