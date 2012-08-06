@@ -54,7 +54,6 @@ run :: Net ()
 run = do
     write "NICK" irc_nick
     write "USER" (irc_nick++" 0 * :avocado butt")
-    write "JOIN" irc_chan
     asks socket >>= listen
  
 --
@@ -82,6 +81,7 @@ handle :: Message -> Net ()
 handle s = do
   liftIO $ putStrLn (msgComplete s)
   case msgCommand s of
+    "376"         -> write "JOIN" irc_chan
     "PRIVMSG"     -> eval $ clean $ msgComplete s
     _             -> return ()
 
