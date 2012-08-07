@@ -13,7 +13,7 @@ import Network.IRC hiding (privmsg)
 irc_server = "chat.freenode.org"
 irc_port   = 6667
 irc_channels   = ["#reddit-ucla-avocado", "#avocadobonertrust", "#avocadospam"]
-irc_nick   = "bruinbot"
+irc_nick   = "lurkbot"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.

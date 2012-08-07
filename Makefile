@@ -1,6 +1,6 @@
 all:
-	ghc -O --make -o bruinbot bruinbot.hs
+	ghc -O --make -o lurk lurk.hs
 
 clean:
 	find . \( -name '*.o' -o -name '*.hi' \) -exec rm {} \;
-	rm bruinbot
+	rm lurk

@@ -5,11 +5,11 @@
 A simple, clean IRC bot in Haskell
 
     $ make
-    $ ./bruinbot
+    $ ./lurk
 
 or
 
-    $ runhaskell ./bruinbot.hs
+    $ runhaskell ./lurk.hs
 
 ## DEPENDENCIES
 Not sure of all the dependencies, but the following are needed
