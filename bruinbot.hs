@@ -8,11 +8,11 @@ import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
 import Bruinbot.Curl
-import Bruinbot.IRC
+import Network.IRC hiding (privmsg)
  
 irc_server = "chat.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla"
+irc_chan   = "#reddit-ucla-avocado"
 irc_nick   = "bruinbot"
  
 --
@@ -62,7 +62,7 @@ run = do
 listen :: Handle -> Net ()
 listen h = forever $ do
     s <- init `fmap` liftIO (hGetLine h)
-    if ping s then pong s else handle (readExpr s)
+    if ping s then pong s else handle s
   where
     forever a = a >> forever a
     ping x    = "PING :" `isPrefixOf` x
@@ -77,24 +77,27 @@ write s t = do
     liftIO $ hPrintf h "%s %s\r\n" s t
     liftIO $ printf    "> %s %s\n" s t
 
-handle :: Message -> Net ()
+handle :: String -> Net ()
 handle s = do
-  liftIO $ putStrLn (msgComplete s)
-  case msgCommand s of
-    "376"         -> write "JOIN" irc_chan
-    "PRIVMSG"     -> eval $ clean $ msgComplete s
-    _             -> return ()
+  case decode (s++"\r\n") of
+    Nothing -> return ()
+    Just msg -> case msg_command msg of
+      "376"         -> write "JOIN" irc_chan
+      "PRIVMSG"     -> eval chan mess where
+                         chan = head $ msg_params msg
+                         mess = last $ msg_params msg
+      _             -> return ()
 
-eval :: String -> Net ()
-eval     "!quit"                 = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
-eval x | "!id " `isPrefixOf` x   = privmsg (drop 4 x)
-eval x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
+eval :: String -> String -> Net ()
+eval _    "!quit"                 = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
+eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
                                        title <- liftIO $ getTitle x;
-                                       privmsg title; }) urls
-eval     _                       = return () -- ignore everything else
+                                       privmsg c title; }) urls
+eval _    _                       = return () -- ignore everything else
 
-privmsg :: String -> Net ()
-privmsg s = write "PRIVMSG" (irc_chan ++ " :" ++ s)
+privmsg :: String -> String -> Net ()
+privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
 
 clean :: String -> String
 clean = drop 1 . dropWhile (/= ':') . drop 1
