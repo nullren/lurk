@@ -7,7 +7,7 @@ import System.Exit
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
-import Bruinbot.Curl
+import Lurk.Curl
 import Network.IRC hiding (privmsg)
  
 irc_server = "chat.freenode.org"
