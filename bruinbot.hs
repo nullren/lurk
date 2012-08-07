@@ -12,7 +12,7 @@ import Network.IRC hiding (privmsg)
  
 irc_server = "chat.freenode.org"
 irc_port   = 6667
-irc_chan   = "#reddit-ucla-avocado"
+irc_channels   = ["#reddit-ucla-avocado", "#avocadobonertrust", "#avocadospam"]
 irc_nick   = "bruinbot"
  
 --
@@ -82,7 +82,7 @@ handle s = do
   case decode (s++"\r\n") of
     Nothing -> return ()
     Just msg -> case msg_command msg of
-      "376"         -> write "JOIN" irc_chan
+      "376"         -> mapM_ (\x -> write "JOIN" x) irc_channels
       "PRIVMSG"     -> eval chan mess where
                          chan = head $ msg_params msg
                          mess = last $ msg_params msg
