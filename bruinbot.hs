@@ -62,6 +62,7 @@ run = do
 listen :: Handle -> Net ()
 listen h = forever $ do
     s <- init `fmap` liftIO (hGetLine h)
+    liftIO (putStrLn s)
     if ping s then pong s else handle s
   where
     forever a = a >> forever a
