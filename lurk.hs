@@ -7,13 +7,9 @@ import System.Exit
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
+import Lurk.Config
 import Lurk.Url
-import Network.IRC hiding (privmsg)
- 
-irc_server = "chat.freenode.org"
-irc_port   = 6667
-irc_channels   = ["#reddit-ucla-avocado", "#avocadobonertrust", "#avocadospam"]
-irc_nick   = "lurkbot"
+import Network.IRC hiding (privmsg, nick)
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -37,12 +33,12 @@ main = E.bracket connect disconnect loop
 connect :: IO Bot
 connect = notify $ do
     t <- getClockTime
-    h <- connectTo irc_server (PortNumber (fromIntegral irc_port))
+    h <- connectTo (server lurkBot) (PortNumber . fromIntegral . port $ lurkBot)
     hSetBuffering h NoBuffering
     return (Bot h t)
   where
     notify a = E.bracket_
-        (printf "Connecting to %s ... " irc_server >> hFlush stdout)
+        (printf "Connecting to %s ... " (server lurkBot) >> hFlush stdout)
         (putStrLn "done.")
         a
  
@@ -52,8 +48,8 @@ connect = notify $ do
 --
 run :: Net ()
 run = do
-    write "NICK" irc_nick
-    write "USER" (irc_nick++" 0 * :avocado butt")
+    write "NICK" (nick lurkBot)
+    write "USER" ((nick lurkBot)++" 0 * :avocado butt")
     asks socket >>= listen
  
 --
@@ -83,7 +79,7 @@ handle s = do
   case decode (s++"\r\n") of
     Nothing -> return ()
     Just msg -> case msg_command msg of
-      "376"         -> mapM_ (\x -> write "JOIN" x) irc_channels
+      "376"         -> mapM_ (\x -> write "JOIN" x) (channels lurkBot)
       "PRIVMSG"     -> eval chan mess where
                          chan = head $ msg_params msg
                          mess = last $ msg_params msg
