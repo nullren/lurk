@@ -1,4 +1,4 @@
-module Bruinbot.Curl (
+module Lurk.Curl (
   getTitle
 ) where
 
