@@ -13,4 +13,6 @@ or
 
 ## DEPENDENCIES
 Not sure of all the dependencies, but the following are needed
+
+   - Network.IRC `cabal install irc`
    - Text.HTML.TagSoup
