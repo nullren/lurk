@@ -1,4 +1,7 @@
-module Lurk.Curl (
+{- provide URL utilities -}
+
+module Lurk.Url (
+  getUrls,
   getTitle
 ) where
 
@@ -64,3 +67,9 @@ getContentType uri = do
     Just x -> return x
     Nothing -> return "Oh god"
   strip = unwords . words
+
+getUrls :: String -> [String]
+getUrls s = 
+  let http = filter (\x -> "http://" `isPrefixOf` x) $ words s
+      https = filter (\x -> "https://" `isPrefixOf` x) $ words s
+  in http ++ https

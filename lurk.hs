@@ -7,7 +7,7 @@ import System.Exit
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
-import Lurk.Curl
+import Lurk.Url
 import Network.IRC hiding (privmsg)
  
 irc_server = "chat.freenode.org"
@@ -102,9 +102,3 @@ privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
 
 clean :: String -> String
 clean = drop 1 . dropWhile (/= ':') . drop 1
-
-getUrls :: String -> [String]
-getUrls s = 
-  let http = filter (\x -> "http://" `isPrefixOf` x) $ words s
-      https = filter (\x -> "https://" `isPrefixOf` x) $ words s
-  in http ++ https
