@@ -2,7 +2,8 @@
 
 module Lurk.Url (
   getUrls,
-  getTitle
+  getTitle,
+  getContent
 ) where
 
 import Data.List
@@ -32,7 +33,7 @@ getTitle :: String -> IO String
 getTitle uri = do
   t <- getContentType uri
   if isHTML t then do
-    (_,c) <- curlGetString uri curl_options
+    c <- getContent uri
     case extractTitle c of
       Nothing -> return ("File type: " ++ t )
       Just title -> return title
@@ -67,6 +68,11 @@ getContentType uri = do
     Just x -> return x
     Nothing -> return "Oh god"
   strip = unwords . words
+
+getContent :: String -> IO String
+getContent uri = do
+  (_,c) <- curlGetString uri curl_options
+  return c
 
 getUrls :: String -> [String]
 getUrls s = 
