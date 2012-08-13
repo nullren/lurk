@@ -7,9 +7,14 @@ import System.Exit
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
+
+-- required
 import Lurk.Config
 import Lurk.Url
 import Network.IRC hiding (privmsg, nick)
+
+-- optional plugins
+import Lurk.Google
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
