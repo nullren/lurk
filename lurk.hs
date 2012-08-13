@@ -91,12 +91,13 @@ handle s = do
       _             -> return ()
 
 eval :: String -> String -> Net ()
-eval _    "!quit"                 = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
+eval c x | "!g " `isPrefixOf` x    = privmsg c (getSearchResults x)
 eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
                                        title <- liftIO $ getTitle x;
                                        privmsg c title; }) urls
-eval _    _                       = return () -- ignore everything else
+eval _    _                        = return () -- ignore everything else
 
 privmsg :: String -> String -> Net ()
 privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
