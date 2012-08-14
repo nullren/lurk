@@ -30,7 +30,7 @@ extractTopText = content . tags . decodeString where
   maybeText "Ad" = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
 
-extractSearchResults :: String -> Maybe [String]
+extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> (maybetake $ tags $ decodeString p) where
   
@@ -41,19 +41,20 @@ extractSearchResults p = map content <$> (maybetake $ tags $ decodeString p) whe
   listitems x = map (takeWhile (not . tagCloseLit "li")) (sections (~== "<li class=g>") x)
 
   content s = do
-    let title = (innerText . closetitle . opentitle) s
-    title
+    let url = ((++) "http://google.com" $ getanchor $ opentitle s)
+    ((innerText . closetitle . opentitle) s , Just url)
   opentitle = dropWhile (not . tagOpenLit "h3" (const True))
+  getanchor = fromAttrib "href" . head . dropWhile (not . tagOpenLit "a" (const True))
   closetitle = takeWhile (not . tagCloseLit "h3")
 
   maybetake [] = Nothing
   maybetake s = Just (take 3 s)
 
-getSearchResults :: String -> IO [String]
+getSearchResults :: String -> IO [(String,Maybe String)]
 getSearchResults query = do
   r <- getRawSearchResults query
   case extractTopText r of
     Nothing -> case extractSearchResults r of
       Just s -> return s
-      Nothing -> return ["I don't know what I'm doing!"]
-    Just s -> return [s]
+      Nothing -> return [("I don't know what I'm doing!", Nothing)]
+    Just s -> return [(s, Nothing)]

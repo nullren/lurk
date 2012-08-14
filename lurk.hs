@@ -15,6 +15,9 @@ import Network.IRC hiding (privmsg, nick)
 
 -- optional plugins
 import Lurk.Google
+
+-- url shortener
+import Network.TinyURL
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -111,7 +114,11 @@ eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
 -- use google to get some info
 eval c x | "!g " `isPrefixOf` x    = do
                                        r <- liftIO $ getSearchResults (drop 3 x)
-                                       mapM_ (privmsg c) r
+                                       mapM_ (\(t,u) -> case u of
+                                         Nothing -> privmsg c t
+                                         Just url -> do
+                                           url' <- liftIO $ tinyURL url
+                                           privmsg c (t ++ " <" ++ url' ++ ">")) r
 
 -- every message look for URLs to get titles for
 eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
