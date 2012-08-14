@@ -54,7 +54,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("[" ++ strip t ++ "] " ++ prSi l )
+  return $ ("[" ++ strip t ++ "] " ++ l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of
@@ -62,8 +62,8 @@ getContentType uri = do
     Nothing -> return "Oh god"
   getContentLenHdr :: (String, [(String, String)]) -> IO String
   getContentLenHdr (_, h) = case lookup "Content-Length" h of
-    Just x -> return x
-    Nothing -> return "Oh god"
+    Just x -> return $ prSi $ strip x
+    Nothing -> return "I don't know what you want!"
   strip = unwords . words
   prSi = prettySize . (\x -> read x :: Integer) . strip
 
