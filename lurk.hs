@@ -10,6 +10,7 @@ import Text.Printf
 
 -- required
 import Lurk.Config
+import Lurk.Utils
 import Lurk.Url
 import Network.IRC hiding (privmsg, nick)
 

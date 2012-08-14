@@ -1,7 +1,6 @@
 {- provide URL utilities -}
 
 module Lurk.Url (
-  getUrls,
   getTitle,
   getContent,
   getShortContent,
@@ -9,19 +8,14 @@ module Lurk.Url (
   extractTitle
 ) where
 
-import Data.List
 import Control.Monad.Reader
 import Network.Curl
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 
-
---url = "https://upload.wikimedia.org/wikipedia/commons/4/42/PIA15279_3rovers-stand_D2011_1215_D521.jpg"
-url = "https://google.com"
-
 main = do
-  getTitle url >>= putStrLn
+  getTitle "http://google.com" >>= putStrLn
 
 maxTitleLength :: Int
 maxTitleLength = 80
@@ -81,8 +75,3 @@ getShortContent uri = do
   (_,c) <- curlGetString uri (curl_options ++ [CurlMaxFileSize 2048])
   return c
 
-getUrls :: String -> [String]
-getUrls s = 
-  let http = filter (\x -> "http://" `isPrefixOf` x) $ words s
-      https = filter (\x -> "https://" `isPrefixOf` x) $ words s
-  in http ++ https
