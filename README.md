@@ -19,3 +19,4 @@ Not sure of all the dependencies, but the following are needed
    - Text.HTML.TagSoup.Match `cabal install tagsoup`
    - Network.Curl `cabal install curl`
    - Network `cabal install network`
+   - Network.TinyURL `cabal install tinyurl`
