@@ -1,5 +1,6 @@
 module Lurk.Utils (
-  getUrls
+  getUrls,
+  prettySize
 ) where
 
 import Data.List

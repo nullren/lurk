@@ -13,6 +13,7 @@ import Network.Curl
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
+import Lurk.Utils
 
 main = do
   getTitle "http://google.com" >>= putStrLn
@@ -53,7 +54,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("[" ++ strip t ++ "] " ++ strip l )
+  return $ ("[" ++ strip t ++ "] " ++ prSi l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of
@@ -64,6 +65,7 @@ getContentType uri = do
     Just x -> return x
     Nothing -> return "Oh god"
   strip = unwords . words
+  prSi = prettySize . (\x -> read x :: Integer) . strip
 
 getContent :: String -> IO String
 getContent uri = do
