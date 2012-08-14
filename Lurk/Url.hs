@@ -3,7 +3,9 @@
 module Lurk.Url (
   getUrls,
   getTitle,
-  getContent
+  getContent,
+  getContentType,
+  extractTitle
 ) where
 
 import Data.List
@@ -27,7 +29,7 @@ maxRedirectFollow :: Long
 maxRedirectFollow = 5
 
 curl_options :: [CurlOption]
-curl_options = [CurlFollowLocation True, CurlMaxRedirs maxRedirectFollow, CurlHeader True]
+curl_options = [CurlFollowLocation True, CurlMaxRedirs maxRedirectFollow, CurlHeader False]
 
 getTitle :: String -> IO String
 getTitle uri = do
@@ -43,7 +45,7 @@ getTitle uri = do
   isHTML t = "[text/html" `isPrefixOf` t
 
 extractTitle :: String -> Maybe String
-extractTitle = content . tags . decodeString where
+extractTitle = content . tags where
   tags = closing . opening . canonicalizeTags . parseTags
   opening = dropWhile (not . tagOpenLit "title" (const True))
   closing = takeWhile (not . tagCloseLit "title")
