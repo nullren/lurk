@@ -4,6 +4,7 @@ module Lurk.Url (
   getUrls,
   getTitle,
   getContent,
+  getShortContent,
   getContentType,
   extractTitle
 ) where
@@ -29,11 +30,14 @@ maxRedirectFollow :: Long
 maxRedirectFollow = 5
 
 curl_options :: [CurlOption]
-curl_options = [CurlFollowLocation True, CurlMaxRedirs maxRedirectFollow, CurlHeader False]
+curl_options = [CurlFollowLocation True
+               , CurlMaxRedirs maxRedirectFollow
+               , CurlHeader False
+               ]
 
 getTitle :: String -> IO String
 getTitle uri = do
-  c <- getContent uri
+  c <- getShortContent uri
   case extractTitle c of
     Just title -> return title
     Nothing -> do
@@ -70,6 +74,11 @@ getContentType uri = do
 getContent :: String -> IO String
 getContent uri = do
   (_,c) <- curlGetString uri curl_options
+  return c
+
+getShortContent :: String -> IO String
+getShortContent uri = do
+  (_,c) <- curlGetString uri (curl_options ++ [CurlMaxFileSize 2048])
   return c
 
 getUrls :: String -> [String]
