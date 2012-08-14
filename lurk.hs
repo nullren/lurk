@@ -93,6 +93,7 @@ handle s = do
 eval :: String -> String -> Net ()
 eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
+eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
 eval c x | "!g " `isPrefixOf` x    = do
                                        r <- liftIO $ getSearchResults (drop 3 x)
                                        mapM_ (privmsg c) r

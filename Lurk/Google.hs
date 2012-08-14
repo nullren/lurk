@@ -1,4 +1,5 @@
 module Lurk.Google (
+  getGoogleSearchUrl,
   getSearchResults,
   getRawSearchResults,
   extractTopText
@@ -10,8 +11,11 @@ import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 import Network.HTTP.Base
 
+getGoogleSearchUrl :: String -> String
+getGoogleSearchUrl = (++) "http://google.com/search?q=" . urlEncode
+
 getRawSearchResults :: String -> IO String
-getRawSearchResults q = getContent $ "http://google.com/search?q=" ++ (urlEncode q)
+getRawSearchResults = getContent . getGoogleSearchUrl
 
 extractTopText :: String -> Maybe String
 extractTopText = content . tags . decodeString where
