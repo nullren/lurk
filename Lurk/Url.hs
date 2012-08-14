@@ -74,6 +74,6 @@ getContent uri = do
 
 getShortContent :: String -> IO String
 getShortContent uri = do
-  (_,c) <- curlGetString uri (curl_options ++ [CurlMaxFileSize 2048])
+  (_,c) <- curlGetString uri (curl_options ++ [CurlRange "0-2048"])
   return c
 
