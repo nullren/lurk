@@ -84,26 +84,44 @@ handle s = do
   case decode (s++"\r\n") of
     Nothing -> return ()
     Just msg -> case msg_command msg of
+
+      -- end of MOTD
       "376"         -> mapM_ (\x -> write "JOIN" x) (channels lurkBot)
+
+      -- nick taken
+      "433"         -> write "NICK" (nick lurkBot ++ "_")
+
       "PRIVMSG"     -> eval chan mess where
                          chan = head $ msg_params msg
                          mess = last $ msg_params msg
+      -- do nothing
       _             -> return ()
 
 eval :: String -> String -> Net ()
+
+-- quit
 eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+
+-- test
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
+
+-- give google search url
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
+
+-- use google to get some info
 eval c x | "!g " `isPrefixOf` x    = do
                                        r <- liftIO $ getSearchResults (drop 3 x)
                                        mapM_ (privmsg c) r
+
+-- every message look for URLs to get titles for
 eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
                                        title <- liftIO $ getTitle x;
                                        privmsg c title; }) urls
+
+-- do nothing
 eval _    _                        = return () -- ignore everything else
 
+
+-- short cut
 privmsg :: String -> String -> Net ()
 privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
-
-clean :: String -> String
-clean = drop 1 . dropWhile (/= ':') . drop 1

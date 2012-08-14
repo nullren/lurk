@@ -2,7 +2,8 @@ module Lurk.Google (
   getGoogleSearchUrl,
   getSearchResults,
   getRawSearchResults,
-  extractTopText
+  extractTopText,
+  extractSearchResults
 ) where
 
 import Lurk.Url
@@ -27,6 +28,10 @@ extractTopText = content . tags . decodeString where
   maybeText [] = Nothing
   maybeText "Ad" = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
+
+extractSearchResults :: String -> Maybe [String]
+extractSearchResults [] = Nothing
+extractSearchResults p = Just $ map (innerText) (sections (~== "<li class=g>") $ parseTags p)
 
 getSearchResults :: String -> IO [String]
 getSearchResults query = do
