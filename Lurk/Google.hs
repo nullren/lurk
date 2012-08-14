@@ -19,6 +19,10 @@ getGoogleSearchUrl = (++) "http://google.com/search?q=" . urlEncode
 getRawSearchResults :: String -> IO String
 getRawSearchResults = getContent . getGoogleSearchUrl
 
+maxSearchResults :: Int
+maxSearchResults = 3
+
+-- get the text inside the "topstuff" box if there is any
 extractTopText :: String -> Maybe String
 extractTopText = content . tags . decodeString where
   tags = closing . opening . canonicalizeTags . head . sections (~== "<div id=topstuff>") . parseTags
@@ -30,26 +34,29 @@ extractTopText = content . tags . decodeString where
   maybeText "Ad" = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
 
+-- return a list of page titles and urls
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> (maybetake $ tags $ decodeString p) where
-  
+  -- searches for the list items in search results
   tags = listitems . closing . opening . search
   search = head . sections (~== "<div id=search>") . canonicalizeTags . parseTags
   opening = dropWhile (not . tagOpenLit "ol" (const True))
   closing = takeWhile (not . tagCloseLit "ol")
   listitems x = map (takeWhile (not . tagCloseLit "li")) (sections (~== "<li class=g>") x)
-
+  -- append the domain to each of the urls and return them with the url
+  -- text
   content s = do
     let url = ((++) "http://google.com" $ getanchor $ opentitle s)
     ((innerText . closetitle . opentitle) s , Just url)
   opentitle = dropWhile (not . tagOpenLit "h3" (const True))
   getanchor = fromAttrib "href" . head . dropWhile (not . tagOpenLit "a" (const True))
   closetitle = takeWhile (not . tagCloseLit "h3")
-
+  -- return nothing if an empty list, no search results
   maybetake [] = Nothing
-  maybetake s = Just (take 3 s)
+  maybetake s = Just (take maxSearchResults s)
 
+-- if there is topstuff, display it, or else give search results
 getSearchResults :: String -> IO [(String,Maybe String)]
 getSearchResults query = do
   r <- getRawSearchResults query
