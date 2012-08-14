@@ -93,9 +93,9 @@ handle s = do
 eval :: String -> String -> Net ()
 eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
-eval c x | "!g " `isPrefixOf` x    = do 
-                                       r <- liftIO $ getSearchResults (drop 3 x)
-                                       privmsg c r
+eval c x | "!g " `isPrefixOf` x    = do
+                                       r <- liftIO $ getSearchResults_ (drop 3 x)
+                                       mapM_ (privmsg c) r
 eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
                                        title <- liftIO $ getTitle x;
                                        privmsg c title; }) urls

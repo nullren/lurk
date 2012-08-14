@@ -1,5 +1,6 @@
 module Lurk.Google (
   getSearchResults,
+  getSearchResults_,
   getRawSearchResults,
   extractTopText
 ) where
@@ -10,15 +11,15 @@ import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 import Network.HTTP.Base
 
+getRawSearchResults :: String -> IO String
+getRawSearchResults q = getContent $ "http://google.com/search?q=" ++ (urlEncode q)
+
 getSearchResults :: String -> IO String
 getSearchResults query = do
   r <- getRawSearchResults query
   case extractTopText r of
     Nothing -> return "I wasn't made for this shit!"
     Just s -> return s
-
-getRawSearchResults :: String -> IO String
-getRawSearchResults q = getContent $ "http://google.com/search?q=" ++ (urlEncode q)
 
 extractTopText :: String -> Maybe String
 extractTopText = content . tags . decodeString where
@@ -32,3 +33,9 @@ extractTopText = content . tags . decodeString where
   maybeText t = Just ("Result: " ++ (encodeString t))
 
 
+getSearchResults_ :: String -> IO [String]
+getSearchResults_ query = do
+  r <- getRawSearchResults query
+  case extractTopText r of
+    Nothing -> return ["I wasn't made for this shit!", "Fucker."]
+    Just s -> return [s]
