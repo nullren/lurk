@@ -33,16 +33,12 @@ curl_options = [CurlFollowLocation True, CurlMaxRedirs maxRedirectFollow, CurlHe
 
 getTitle :: String -> IO String
 getTitle uri = do
-  t <- getContentType uri
-  if isHTML t then do
-    c <- getContent uri
-    case extractTitle c of
-      Nothing -> return ("File type: " ++ t )
-      Just title -> return title
-  else do
-    return ("File type: " ++ t )
- where
-  isHTML t = "[text/html" `isPrefixOf` t
+  c <- getContent uri
+  case extractTitle c of
+    Just title -> return title
+    Nothing -> do
+      t <- getContentType uri
+      return ("File type: " ++ t)
 
 extractTitle :: String -> Maybe String
 extractTitle = content . tags where
