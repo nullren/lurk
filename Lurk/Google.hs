@@ -11,6 +11,7 @@ import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 import Network.HTTP.Base
+import Control.Applicative
 
 getGoogleSearchUrl :: String -> String
 getGoogleSearchUrl = (++) "http://google.com/search?q=" . urlEncode
@@ -31,11 +32,28 @@ extractTopText = content . tags . decodeString where
 
 extractSearchResults :: String -> Maybe [String]
 extractSearchResults [] = Nothing
-extractSearchResults p = Just $ map (innerText) (sections (~== "<li class=g>") $ parseTags p)
+extractSearchResults p = map content <$> (maybetake $ tags $ decodeString p) where
+  
+  tags = listitems . closing . opening . search
+  search = head . sections (~== "<div id=search>") . canonicalizeTags . parseTags
+  opening = dropWhile (not . tagOpenLit "ol" (const True))
+  closing = takeWhile (not . tagCloseLit "ol")
+  listitems x = map (takeWhile (not . tagCloseLit "li")) (sections (~== "<li class=g>") x)
+
+  content s = do
+    let title = (innerText . closetitle . opentitle) s
+    title
+  opentitle = dropWhile (not . tagOpenLit "h3" (const True))
+  closetitle = takeWhile (not . tagCloseLit "h3")
+
+  maybetake [] = Nothing
+  maybetake s = Just (take 3 s)
 
 getSearchResults :: String -> IO [String]
 getSearchResults query = do
   r <- getRawSearchResults query
   case extractTopText r of
-    Nothing -> return ["I wasn't made for this shit!", "Fucker."]
+    Nothing -> case extractSearchResults r of
+      Just s -> return s
+      Nothing -> return ["I don't know what I'm doing!"]
     Just s -> return [s]
