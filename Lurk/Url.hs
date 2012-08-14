@@ -35,9 +35,7 @@ getTitle uri = do
   c <- getShortContent uri
   case extractTitle c of
     Just title -> return title
-    Nothing -> do
-      t <- getContentType uri
-      return ("File type: " ++ t)
+    Nothing -> getContentType uri >>= return
 
 extractTitle :: String -> Maybe String
 extractTitle = content . tags where
@@ -54,7 +52,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("[" ++ strip t ++ "] " ++ l )
+  return $ ("File type: of " ++ uri ++ " [" ++ strip t ++ "] " ++ l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of
