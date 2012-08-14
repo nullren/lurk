@@ -57,7 +57,7 @@ connect = notify $ do
 run :: Net ()
 run = do
     write "NICK" (nick lurkBot)
-    write "USER" ((nick lurkBot)++" 0 * :avocado butt")
+    write "USER" ((username lurkBot)++" 0 * :" ++ (realname lurkBot))
     asks socket >>= listen
  
 --
