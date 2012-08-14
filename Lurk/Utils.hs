@@ -4,13 +4,13 @@ module Lurk.Utils (
 ) where
 
 import Data.List
+import Data.Char
 
 -- just something stupid to fetch a list of urls in a string
 getUrls :: String -> [String]
-getUrls s = 
-  let http = filter (\x -> "http://" `isPrefixOf` x) $ words s
-      https = filter (\x -> "https://" `isPrefixOf` x) $ words s
-  in http ++ https
+getUrls = filter theshits . words . map toLower where
+  theshits x = ((isPrefixOf "http://") x && ((>7) . length) x)
+             ||((isPrefixOf "https://") x && ((>8) . length) x)
 
 -- something to make numbers have pretty things in them
 prettySize :: Integer -> String
