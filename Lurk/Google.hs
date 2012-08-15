@@ -30,7 +30,7 @@ maxSearchResults = 3
 
 -- get the text inside the "topstuff" box if there is any
 extractTopText :: String -> Maybe String
-extractTopText = content . tags . decodeString where
+extractTopText = content . tags where
   tags = closing . opening . canonicalizeTags . head . sections (~== "<div id=topstuff>") . parseTags
   opening = dropWhile (not . tagOpenLit "h2" (const True))
   closing = takeWhile (not . tagCloseLit "h2")
@@ -59,7 +59,7 @@ getSbiResults uri = do
 -- return a list of page titles and urls
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
-extractSearchResults p = map content <$> (maybetake $ tags $ decodeString p) where
+extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- searches for the list items in search results
   tags = listitems . closing . opening . search
   search = head . sections (~== "<div id=search>") . canonicalizeTags . parseTags
