@@ -121,6 +121,12 @@ eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
 -- give google search url
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
 
+eval c x | "!gsbi " `isPrefixOf` x = do
+                                       r <- liftIO $ getSbiResults (drop 6 x) 
+                                       privmsg c $ case r of
+                                         Nothing -> "eep nothing found"
+                                         Just s -> s
+
 -- use google to get some info
 eval c x | "!g " `isPrefixOf` x    = do
                                        r <- liftIO $ getSearchResults (drop 3 x)
