@@ -14,7 +14,6 @@ data IRCConfig = IRCConfig { nick :: String
 lurkBot :: IRCConfig
 lurkBot = IRCConfig "lurkbot" "lurkbot" "avocados butt"
                       "chat.freenode.org" 6667 
-                      [ "#reddit-ucla-avocado"
-                      , "#reddit-ucla"
+                      [ "#reddit-ucla"
                       , "#avocadobonertrust"
-                      , "#avocadospam"]
+                      ]
