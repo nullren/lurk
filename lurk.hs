@@ -4,6 +4,7 @@ import Network
 import System.IO
 import System.Time
 import System.Exit
+import Control.Concurrent
 import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
@@ -44,6 +45,7 @@ connect :: IO Bot
 connect = notify $ do
     t <- getClockTime
     h <- connectTo (server lurkBot) (PortNumber . fromIntegral . port $ lurkBot)
+    forkIO (forever (getLine >>= hPrintf h "%s\r\n"))
     hSetBuffering h NoBuffering
     return (Bot h t)
   where
