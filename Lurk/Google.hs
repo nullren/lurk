@@ -1,5 +1,6 @@
 module Lurk.Google (
   getGoogleSearchUrl,
+  getGoogleSearchByImageUrl,
   getSearchResults,
   getRawSearchResults,
   extractTopText,
@@ -15,6 +16,9 @@ import Control.Applicative
 
 getGoogleSearchUrl :: String -> String
 getGoogleSearchUrl = (++) "http://google.com/search?q=" . urlEncode
+
+getGoogleSearchByImageUrl :: String -> String
+getGoogleSearchByImageUrl = (++) "http://google.com/searchbyimage?image_url=" . urlEncode
 
 getRawSearchResults :: String -> IO String
 getRawSearchResults = getContent . getGoogleSearchUrl
