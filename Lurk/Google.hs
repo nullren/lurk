@@ -2,8 +2,10 @@ module Lurk.Google (
   getGoogleSearchUrl,
   getGoogleSearchByImageUrl,
   getSearchResults,
+  getSbiResults,
   getRawSearchResults,
   extractTopText,
+  extractSbiKeywords,
   extractSearchResults
 ) where
 
@@ -37,6 +39,22 @@ extractTopText = content . tags . decodeString where
   maybeText [] = Nothing
   maybeText "Ad" = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
+
+-- get keywords from the google sbi image page
+extractSbiKeywords :: String -> Maybe String
+extractSbiKeywords = content . tags . decodeString where
+  tags = closing . opening . canonicalizeTags . head . sections (~== "<div id=topstuff>") . parseTags
+  opening = dropWhile (not . tagOpenLit "a" (any (\(n,v) -> n=="style" && v=="font-weight:bold;font-style:italic")))
+  closing = takeWhile (not . tagCloseLit "a")
+  content = maybeText . format . innerText
+  format = unwords . words
+  maybeText [] = Nothing
+  maybeText t = Just ("Result: " ++ (encodeString t))
+
+getSbiResults :: String -> IO (Maybe String)
+getSbiResults uri = do
+  r <- getContent $ getGoogleSearchByImageUrl uri
+  return $ extractSbiKeywords r
 
 -- return a list of page titles and urls
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
