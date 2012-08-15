@@ -4,6 +4,7 @@ import Network
 import System.IO
 import System.Time
 import System.Exit
+import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
@@ -70,7 +71,6 @@ listen h = forever $ do
     liftIO (putStrLn s)
     if ping s then pong s else handle s
   where
-    forever a = a >> forever a
     ping x    = "PING :" `isPrefixOf` x
     pong x    = write "PONG" (':' : drop 6 x)
  
