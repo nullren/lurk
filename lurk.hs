@@ -109,6 +109,9 @@ eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO (exitWith
 -- test
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
 
+-- test action
+eval c x | "!slap " `isPrefixOf` x = privmsg c ("\001ACTION slaps " ++ (drop 6 x) ++ " around with a large trout!\001")
+
 -- give google search url
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
 
