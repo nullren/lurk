@@ -42,7 +42,7 @@ extractTopText = content . tags where
 
 -- get keywords from the google sbi image page
 extractSbiKeywords :: String -> Maybe String
-extractSbiKeywords = content . tags . decodeString where
+extractSbiKeywords = content . tags where
   tags = closing . opening . canonicalizeTags . head . sections (~== "<div id=topstuff>") . parseTags
   opening = dropWhile (not . tagOpenLit "a" (any (\(n,v) -> n=="style" && v=="font-weight:bold;font-style:italic")))
   closing = takeWhile (not . tagCloseLit "a")
