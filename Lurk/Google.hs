@@ -42,9 +42,11 @@ getSbiResults :: String -> IO [(String, Maybe String)]
 getSbiResults u = getGenericResults extractSbiKeywords (getGoogleSearchByImageUrl u)
 
 getSearchResults :: String -> IO [(String,Maybe String)]
-getSearchResults u = getGenericResults extractTopText (getGoogleSearchUrl u)
+getSearchResults u = getGenericResults extractNothing (getGoogleSearchUrl u)
 
--- get the text inside the "topstuff" box if there is any
+extractNothing :: String -> Maybe String
+extractNothing url = Nothing
+
 extractTopText :: String -> Maybe String
 extractTopText = content . tags where
   tags = closing . opening . canonicalizeTags . head' . sections (~== "<div id=topstuff>") . parseTags
