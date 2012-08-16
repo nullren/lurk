@@ -51,10 +51,14 @@ extractSbiKeywords = content . tags where
   maybeText [] = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
 
-getSbiResults :: String -> IO (Maybe String)
+getSbiResults :: String -> IO [(String, Maybe String)]
 getSbiResults uri = do
   r <- getContent $ getGoogleSearchByImageUrl uri
-  return $ extractSbiKeywords r
+  case extractSbiKeywords r of
+    Nothing -> case extractSearchResults r of
+      Just s -> return s
+      Nothing -> return [("I don't know what I'm doing!", Nothing)]
+    Just s -> return [(s, Nothing)]
 
 -- return a list of page titles and urls
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
@@ -62,7 +66,9 @@ extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- searches for the list items in search results
   tags = listitems . closing . opening . search
-  search = head . sections (~== "<div id=search>") . canonicalizeTags . parseTags
+  search = head' . sections (~== "<div id=search>") . canonicalizeTags . parseTags
+  head' [] = []
+  head' x = head x
   opening = dropWhile (not . tagOpenLit "ol" (const True))
   closing = takeWhile (not . tagCloseLit "ol")
   listitems x = map (takeWhile (not . tagCloseLit "li")) (sections (~== "<li class=g>") x)
