@@ -1,31 +1,53 @@
 module Lurk.Google (
   getGoogleSearchUrl,
+  getGoogleSearchByImageUrl,
   getSearchResults,
-  getRawSearchResults,
+  getSbiResults,
   extractTopText,
+  extractSbiKeywords,
   extractSearchResults
 ) where
 
 import Lurk.Url
+import Lurk.Utils
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 import Network.HTTP.Base
 import Control.Applicative
 
+genericSearchUrl :: String -> String -> String
+genericSearchUrl uri = (++) uri . urlEncode
+
 getGoogleSearchUrl :: String -> String
-getGoogleSearchUrl = (++) "http://google.com/search?q=" . urlEncode
+getGoogleSearchUrl = genericSearchUrl "http://google.com/search?q="
 
-getRawSearchResults :: String -> IO String
-getRawSearchResults = getContent . getGoogleSearchUrl
+getGoogleSearchByImageUrl :: String -> String
+getGoogleSearchByImageUrl = genericSearchUrl "http://google.com/searchbyimage?image_url="
 
-maxSearchResults :: Int
-maxSearchResults = 3
+maxSearchResults = 3 :: Int
+
+getGenericResults :: (String -> Maybe String)
+                  -> String
+                  -> IO [(String, Maybe String)]
+getGenericResults extractor uri = do
+  r <- getContent $ uri
+  case extractor r of
+    Nothing -> case extractSearchResults r of
+      Just s -> return s
+      Nothing -> return [("I don't know what I'm doing!", Nothing)]
+    Just s -> return [(s, Nothing)]
+
+getSbiResults :: String -> IO [(String, Maybe String)]
+getSbiResults u = getGenericResults extractSbiKeywords (getGoogleSearchByImageUrl u)
+
+getSearchResults :: String -> IO [(String,Maybe String)]
+getSearchResults u = getGenericResults extractTopText (getGoogleSearchUrl u)
 
 -- get the text inside the "topstuff" box if there is any
 extractTopText :: String -> Maybe String
 extractTopText = content . tags where
-  tags = closing . opening . canonicalizeTags . head . sections (~== "<div id=topstuff>") . parseTags
+  tags = closing . opening . canonicalizeTags . head' . sections (~== "<div id=topstuff>") . parseTags
   opening = dropWhile (not . tagOpenLit "h2" (const True))
   closing = takeWhile (not . tagCloseLit "h2")
   content = maybeText . format . innerText
@@ -34,13 +56,24 @@ extractTopText = content . tags where
   maybeText "Ad" = Nothing
   maybeText t = Just ("Result: " ++ (encodeString t))
 
+-- get keywords from the google sbi image page
+extractSbiKeywords :: String -> Maybe String
+extractSbiKeywords = content . tags where
+  tags = closing . opening . canonicalizeTags . head' . sections (~== "<div id=topstuff>") . parseTags
+  opening = dropWhile (not . tagOpenLit "a" (any (\(n,v) -> n=="style" && v=="font-weight:bold;font-style:italic")))
+  closing = takeWhile (not . tagCloseLit "a")
+  content = maybeText . format . innerText
+  format = unwords . words
+  maybeText [] = Nothing
+  maybeText t = Just ("Result: " ++ (encodeString t))
+
 -- return a list of page titles and urls
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- searches for the list items in search results
   tags = listitems . closing . opening . search
-  search = head . sections (~== "<div id=search>") . canonicalizeTags . parseTags
+  search = head' . sections (~== "<div id=search>") . canonicalizeTags . parseTags
   opening = dropWhile (not . tagOpenLit "ol" (const True))
   closing = takeWhile (not . tagCloseLit "ol")
   listitems x = map (takeWhile (not . tagCloseLit "li")) (sections (~== "<li class=g>") x)
@@ -55,13 +88,3 @@ extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- return nothing if an empty list, no search results
   maybetake [] = Nothing
   maybetake s = Just (take maxSearchResults s)
-
--- if there is topstuff, display it, or else give search results
-getSearchResults :: String -> IO [(String,Maybe String)]
-getSearchResults query = do
-  r <- getRawSearchResults query
-  case extractTopText r of
-    Nothing -> case extractSearchResults r of
-      Just s -> return s
-      Nothing -> return [("I don't know what I'm doing!", Nothing)]
-    Just s -> return [(s, Nothing)]

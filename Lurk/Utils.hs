@@ -1,5 +1,6 @@
 module Lurk.Utils (
   getUrls,
+  head',
   prettySize
 ) where
 
@@ -14,6 +15,10 @@ getUrls = filter crit . words where
              ||((isPrefixOf "https://") x && ((>8) . length) x)
   low = map toLower
 
+head' [] = []
+head' s = head s
+
 -- something to make numbers have pretty things in them
 prettySize :: Integer -> String
 prettySize = show
+
