@@ -4,6 +4,8 @@ import Network
 import System.IO
 import System.Time
 import System.Exit
+import Control.Concurrent
+import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf 
@@ -43,6 +45,7 @@ connect :: IO Bot
 connect = notify $ do
     t <- getClockTime
     h <- connectTo (server lurkBot) (PortNumber . fromIntegral . port $ lurkBot)
+    forkIO (forever (getLine >>= hPrintf h "%s\r\n"))
     hSetBuffering h NoBuffering
     return (Bot h t)
   where
@@ -70,7 +73,6 @@ listen h = forever $ do
     liftIO (putStrLn s)
     if ping s then pong s else handle s
   where
-    forever a = a >> forever a
     ping x    = "PING :" `isPrefixOf` x
     pong x    = write "PONG" (':' : drop 6 x)
  
@@ -121,6 +123,17 @@ eval c x | "!slap " `isPrefixOf` x = privmsg c ("\001ACTION slaps " ++ (drop 6 x
 
 -- give google search url
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
+
+eval c x | "!gsbi " `isPrefixOf` x = do
+                                       r <- liftIO $ getSbiResults (drop 6 x) 
+                                       mapM_ (\(t,u) -> case u of
+                                         Nothing -> privmsg c t
+                                         Just url -> do
+                                           url' <- liftIO $ tinyURL url
+                                           privmsg c (t ++ " <" ++ url' ++ ">")) r
+                                       --privmsg c $ case r of
+                                        -- Nothing -> "eep nothing found"
+                                         --Just s -> s
 
 -- use google to get some info
 eval c x | "!g " `isPrefixOf` x    = do
