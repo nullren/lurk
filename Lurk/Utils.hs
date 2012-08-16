@@ -1,8 +1,9 @@
-module Lurk.Utils (
-  getUrls,
-  head',
-  prettySize
-) where
+module Lurk.Utils 
+  ( getUrls
+  , head'
+  , prettySize
+  , humanReadable
+  ) where
 
 import Data.List
 import Data.Char
@@ -21,11 +22,18 @@ head' s = head s
 
 -- something to make numbers have pretty things in them
 prettySize :: Integer -> String
-prettySize x 
-  | x > 1024^3 = printf "%.1fG" (d x (1024^3)) 
-  | x > 1024^2 = printf "%.0fM" (d x (1024^2))
-  | x > 1024   = printf "%.0fK" (d x 1024) 
-  | otherwise  = show x
+prettySize x = humanReadable (realToFrac x) 1024 0
+
+humanReadable :: Double -> Double -> Integer -> String
+humanReadable num base power
+  | power > 4 = "Fucking huge"
+  | num > base = humanReadable (num / base) base (power + 1)
+  | otherwise = printf pstr num (suffix power)
   where
-    d :: Integer -> Integer -> Double
-    d z y = (realToFrac z)/(realToFrac y)
+    pstr = if num > 10 then "%.0f%s" else "%.1f%s"
+    suffix 0 = ""
+    suffix 1 = "K"
+    suffix 2 = "M"
+    suffix 3 = "G"
+    suffix 4 = "T"
+    suffix _ = "?"
