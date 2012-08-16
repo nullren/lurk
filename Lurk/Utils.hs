@@ -3,6 +3,7 @@ module Lurk.Utils
   , head'
   , prettySize
   , humanReadable
+  , safeIndex
   ) where
 
 import Data.List
@@ -24,7 +25,7 @@ head' s = head s
 prettySize :: Integer -> String
 prettySize x = humanReadable (realToFrac x) 1024 0
 
-humanReadable :: Double -> Double -> Integer -> String
+humanReadable :: Double -> Double -> Int -> String
 humanReadable num base power
   | num < 0    = "Negative file size!"
   | power > 8  = "Fucking huge!"
@@ -42,3 +43,8 @@ humanReadable num base power
     suffix 7 = "Z" -- zetta
     suffix 8 = "Y" -- yotta
     suffix _ = "?"
+
+safeIndex :: Int -> [a] -> Maybe a
+safeIndex _ []     = Nothing
+safeIndex 0 (x:_)  = Just x
+safeIndex i (x:xs) = safeIndex (i-1) xs
