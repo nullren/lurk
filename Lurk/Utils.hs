@@ -20,13 +20,12 @@ head' [] = []
 head' s = head s
 
 -- something to make numbers have pretty things in them
-prettySize :: (Real a, Show a) => a -> String
+prettySize :: Integer -> String
 prettySize x 
-  | x > 1024^3 = printf "%.1f GB\n" (d x (1024^3)) 
-  | x > 1024^2 = printf "%.1f MB\n" (d x (1024^2))
-  | x > 1024   = printf "%.1f KB\n" (d x 1024) 
+  | x > 1024^3 = printf "%.1fG" (d x (1024^3)) 
+  | x > 1024^2 = printf "%.0fM" (d x (1024^2))
+  | x > 1024   = printf "%.0fK" (d x 1024) 
   | otherwise  = show x
   where
-    d :: (PrintfArg a, Fractional a, Real a1, Real a2) => a1 -> a2 -> a
+    d :: Integer -> Integer -> Double
     d z y = (realToFrac z)/(realToFrac y)
-
