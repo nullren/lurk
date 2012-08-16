@@ -9,6 +9,7 @@ module Lurk.Google (
 ) where
 
 import Lurk.Url
+import Lurk.Utils
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
@@ -24,11 +25,7 @@ getGoogleSearchUrl = genericSearchUrl "http://google.com/search?q="
 getGoogleSearchByImageUrl :: String -> String
 getGoogleSearchByImageUrl = genericSearchUrl "http://google.com/searchbyimage?image_url="
 
-maxSearchResults :: Int
-maxSearchResults = 3
-
-head' [] = []
-head' s = head s
+maxSearchResults = 3 :: Int
 
 getGenericResults :: (String -> Maybe String)
                   -> String
@@ -44,7 +41,6 @@ getGenericResults extractor uri = do
 getSbiResults :: String -> IO [(String, Maybe String)]
 getSbiResults u = getGenericResults extractSbiKeywords (getGoogleSearchByImageUrl u)
 
--- if there is topstuff, display it, or else give search results
 getSearchResults :: String -> IO [(String,Maybe String)]
 getSearchResults u = getGenericResults extractTopText (getGoogleSearchUrl u)
 
@@ -92,4 +88,3 @@ extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- return nothing if an empty list, no search results
   maybetake [] = Nothing
   maybetake s = Just (take maxSearchResults s)
-
