@@ -22,7 +22,7 @@ head' [] = []
 head' s = head s
 
 -- something to make numbers have pretty things in them
-prettySize :: Integer -> String
+prettySize :: (Integral a) => a -> String
 prettySize x = humanReadable (realToFrac x) 1024 0
 
 humanReadable :: Double -> Double -> Int -> String
@@ -47,4 +47,4 @@ humanReadable num base power
 safeIndex :: Int -> [a] -> Maybe a
 safeIndex _ []     = Nothing
 safeIndex 0 (x:_)  = Just x
-safeIndex i (x:xs) = safeIndex (i-1) xs
+safeIndex i (_:xs) = safeIndex (i-1) xs
