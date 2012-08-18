@@ -13,8 +13,12 @@ import Lurk.Utils
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
+import Network.Curl
 import Network.HTTP.Base
 import Control.Applicative
+
+maxSearchResults = 3 :: Int
+userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.77 Safari/537.1" :: String
 
 genericSearchUrl :: String -> String -> String
 genericSearchUrl uri = (++) uri . urlEncode
@@ -25,24 +29,29 @@ getGoogleSearchUrl = genericSearchUrl "http://google.com/search?q="
 getGoogleSearchByImageUrl :: String -> String
 getGoogleSearchByImageUrl = genericSearchUrl "http://google.com/searchbyimage?image_url="
 
-maxSearchResults = 3 :: Int
-
 getGenericResults :: (String -> Maybe String)
+                  -> (String -> Maybe [(String, Maybe String)])
                   -> String
                   -> IO [(String, Maybe String)]
-getGenericResults extractor uri = do
-  r <- getContent $ uri
+getGenericResults extractor altext uri = do
+  r <- getContent_ [CurlUserAgent userAgent] $ uri
   case extractor r of
-    Nothing -> case extractSearchResults r of
+    Nothing -> case altext r of
       Just s -> return s
       Nothing -> return [("I don't know what I'm doing!", Nothing)]
     Just s -> return [(s, Nothing)]
 
 getSbiResults :: String -> IO [(String, Maybe String)]
-getSbiResults u = getGenericResults extractSbiKeywords (getGoogleSearchByImageUrl u)
+getSbiResults u = getGenericResults 
+                    extractSbiKeywords 
+                    extractSearchNothing
+                    (getGoogleSearchByImageUrl u)
 
 getSearchResults :: String -> IO [(String,Maybe String)]
-getSearchResults u = getGenericResults extractNothing (getGoogleSearchUrl u)
+getSearchResults u = getGenericResults 
+                       extractNothing 
+                       extractSearchResults
+                       (getGoogleSearchUrl u)
 
 extractNothing :: String -> Maybe String
 extractNothing url = Nothing
@@ -56,7 +65,7 @@ extractTopText = content . tags where
   format = unwords . words
   maybeText [] = Nothing
   maybeText "Ad" = Nothing
-  maybeText t = Just ("Result: " ++ (encodeString t))
+  maybeText t = Just (encodeString t)
 
 -- get keywords from the google sbi image page
 extractSbiKeywords :: String -> Maybe String
@@ -67,9 +76,12 @@ extractSbiKeywords = content . tags where
   content = maybeText . format . innerText
   format = unwords . words
   maybeText [] = Nothing
-  maybeText t = Just ("Result: " ++ (encodeString t))
+  maybeText t = Just (encodeString t)
 
 -- return a list of page titles and urls
+extractSearchNothing :: String -> Maybe [(String, Maybe String)]
+extractSearchNothing _ = Just [("",Nothing)]
+
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> (maybetake $ tags p) where
