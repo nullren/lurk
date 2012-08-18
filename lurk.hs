@@ -18,6 +18,7 @@ import Network.IRC hiding (privmsg, nick)
 
 -- optional plugins
 import Lurk.Google
+import Network.Curl
 
 -- url shortener
 import Network.TinyURL
@@ -136,9 +137,10 @@ eval c x | "!g " `isPrefixOf` x    = do
                                            privmsg c (t ++ " <" ++ url' ++ ">")) r
 
 -- every message look for URLs to get titles for
-eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do {
-                                       title <- liftIO $ getTitle x;
-                                       privmsg c title; }) urls
+eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do
+                                       title <- liftIO $ getTitle x
+                                       privmsg c title 
+                                       ) urls
 
 -- do nothing
 eval _    _                        = return () -- ignore everything else

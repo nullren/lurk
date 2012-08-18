@@ -4,8 +4,11 @@ module Lurk.Google (
   getSearchResults,
   getSbiResults,
   extractTopText,
+  extractNothing,
   extractSbiKeywords,
-  extractSearchResults
+  extractSearchResults,
+  extractSearchNothing,
+  firefoxUserAgent
 ) where
 
 import Lurk.Url
