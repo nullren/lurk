@@ -18,7 +18,7 @@ import Network.HTTP.Base
 import Control.Applicative
 
 maxSearchResults = 3 :: Int
-userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.77 Safari/537.1" :: String
+firefoxUserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.77 Safari/537.1" :: String
 
 genericSearchUrl :: String -> String -> String
 genericSearchUrl uri = (++) uri . urlEncode
@@ -29,12 +29,13 @@ getGoogleSearchUrl = genericSearchUrl "http://google.com/search?q="
 getGoogleSearchByImageUrl :: String -> String
 getGoogleSearchByImageUrl = genericSearchUrl "http://google.com/searchbyimage?image_url="
 
-getGenericResults :: (String -> Maybe String)
+getGenericResults :: String
+                  -> (String -> Maybe String)
                   -> (String -> Maybe [(String, Maybe String)])
                   -> String
                   -> IO [(String, Maybe String)]
-getGenericResults extractor altext uri = do
-  r <- getContent_ [CurlUserAgent userAgent] $ uri
+getGenericResults ua extractor altext uri = do
+  r <- getContent_ [CurlUserAgent ua] $ uri
   case extractor r of
     Nothing -> case altext r of
       Just s -> return s
@@ -43,13 +44,14 @@ getGenericResults extractor altext uri = do
 
 getSbiResults :: String -> IO [(String, Maybe String)]
 getSbiResults u = getGenericResults 
+                    firefoxUserAgent
                     extractSbiKeywords 
                     extractSearchNothing
                     (getGoogleSearchByImageUrl u)
 
 getSearchResults :: String -> IO [(String,Maybe String)]
-getSearchResults u = getGenericResults 
-                       extractNothing 
+getSearchResults u = getGenericResults "-"
+                       extractTopText
                        extractSearchResults
                        (getGoogleSearchUrl u)
 
