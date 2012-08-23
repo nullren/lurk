@@ -1,9 +1,13 @@
 module Lurk.Bot where
 
+import Network
+import System.IO
+import System.Time
 import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Lurk.Bot.Config
+import Text.Printf
 
 runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
