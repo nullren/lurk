@@ -5,6 +5,7 @@ import Lurk.Handler.Slap (slapHandler)
 import Lurk.Handler.Urls (urlHandler)
 import Lurk.Handler.Logging (logHandler)
 import Lurk.Handler.EverythingElse (miscHandler)
+import Lurk.Handler.Choose (chooseHandler)
 main = runBot lurkBot
 
 -- | configure your bot here!
@@ -20,8 +21,9 @@ lurkBot = defaultLurkBot
             , handlers = [ logHandler
                          , googleHandler
                          , slapHandler
-                         , urlHandler
+                         , chooseHandler
                          , miscHandler
+                         , urlHandler
                          ]
             , database = "/tmp/lurk.db"
             , logging = False
