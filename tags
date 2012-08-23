@@ -1,12 +1,13 @@
-Bot	lurk.hs	30;"	d
-Bot	lurk.hs	30;"	t
-IRCConfig	./Lurk/Config.hs	6;"	d
-IRCConfig	./Lurk/Config.hs	6;"	t
-Net	lurk.hs	29;"	t
-channels	./Lurk/Config.hs	11;"	v
-connect	lurk.hs	45;"	v
+Bot	./Lurk/Bot/Config.hs	16;"	d
+Bot	./Lurk/Bot/Config.hs	16;"	t
+BotConfig	./Lurk/Bot/Config.hs	7;"	d
+BotConfig	./Lurk/Bot/Config.hs	7;"	t
+Net	./Lurk/Bot/Config.hs	15;"	t
+channels	./Lurk/Bot/Config.hs	12;"	v
+config	./Lurk/Bot/Config.hs	16;"	v
+connect	./Lurk/Bot.hs	23;"	v
 curl_options	./Lurk/Url.hs	28;"	v	file:
-eval	lurk.hs	116;"	v
+eval	./Lurk/Eval.hs	19;"	v
 extractNothing	./Lurk/Google.hs	48;"	v	file:
 extractSbiKeywords	./Lurk/Google.hs	63;"	v
 extractSearchResults	./Lurk/Google.hs	74;"	v
@@ -23,25 +24,26 @@ getSbiResults	./Lurk/Google.hs	42;"	v
 getSearchResults	./Lurk/Google.hs	45;"	v
 getTitle	./Lurk/Url.hs	35;"	v
 getUrls	./Lurk/Utils.hs	15;"	v
-handle	lurk.hs	89;"	v
+handle	./Lurk/Handler.hs	11;"	v
 head'	./Lurk/Utils.hs	21;"	v
 humanReadable	./Lurk/Utils.hs	29;"	v
-listen	lurk.hs	71;"	v
-lurkBot	./Lurk/Config.hs	15;"	v
+listen	./Lurk/Bot.hs	43;"	v
+lurkBot	lurk.hs	5;"	v
 main	./Lurk/Url.hs	18;"	v	file:
-main	lurk.hs	36;"	v
+main	lurk.hs	14;"	v
 maxRedirectFollow	./Lurk/Url.hs	25;"	v	file:
 maxSearchResults	./Lurk/Google.hs	28;"	v	file:
 maxTitleLength	./Lurk/Url.hs	22;"	v	file:
-nick	./Lurk/Config.hs	6;"	v
-port	./Lurk/Config.hs	10;"	v
+nick	./Lurk/Bot/Config.hs	7;"	v
+port	./Lurk/Bot/Config.hs	11;"	v
 prettySize	./Lurk/Utils.hs	26;"	v
-privmsg	lurk.hs	158;"	v
-realname	./Lurk/Config.hs	8;"	v
-run	lurk.hs	62;"	v
+privmsg	./Lurk/Bot/IRC.hs	15;"	v
+realname	./Lurk/Bot/Config.hs	9;"	v
+run	./Lurk/Bot.hs	36;"	v
+runBot	./Lurk/Bot.hs	17;"	v
 safeIndex	./Lurk/Utils.hs	48;"	v
-server	./Lurk/Config.hs	9;"	v
-socket	lurk.hs	30;"	v
-starttime	lurk.hs	30;"	v
-username	./Lurk/Config.hs	7;"	v
-write	lurk.hs	83;"	v
+server	./Lurk/Bot/Config.hs	10;"	v
+socket	./Lurk/Bot/Config.hs	16;"	v
+starttime	./Lurk/Bot/Config.hs	16;"	v
+username	./Lurk/Bot/Config.hs	8;"	v
+write	./Lurk/Bot/IRC.hs	9;"	v

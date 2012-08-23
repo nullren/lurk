@@ -1,13 +1,17 @@
 module Lurk.Bot where
 
+import Data.List
 import Network
 import System.IO
 import System.Time
+import Control.Concurrent
 import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
-import Lurk.Bot.Config
 import Text.Printf
+import Lurk.Bot.Config
+import Lurk.Bot.IRC
+import Lurk.Handler
 
 runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
@@ -37,19 +41,9 @@ run = do
 
 listen :: Handle -> Net ()
 listen h = forever $ do
-  s <- init `fmap` liftIO $ hGetLine h
+  s <- init `fmap` liftIO (hGetLine h)
   liftIO $ putStrLn s
   if ping s then pong s else handle s
   where
     ping x = "PING :" `isPrefixOf` x
     pong x = write "PONG" (':' : drop 6 x)
-
-write :: String -> String -> Net ()
-write s t = do
-  h <- asks socket
-  liftIO $ hPrintf h "%s %s\r\n" s t
-  liftIO $ printf    "> %s %s\n" s t
-
-privmsg :: String -> String -> Net ()
-privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
-
