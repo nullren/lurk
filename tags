@@ -1,49 +1,69 @@
-Bot	./Lurk/Bot/Config.hs	16;"	d
-Bot	./Lurk/Bot/Config.hs	16;"	t
-BotConfig	./Lurk/Bot/Config.hs	7;"	d
-BotConfig	./Lurk/Bot/Config.hs	7;"	t
-Net	./Lurk/Bot/Config.hs	15;"	t
-channels	./Lurk/Bot/Config.hs	12;"	v
-config	./Lurk/Bot/Config.hs	16;"	v
-connect	./Lurk/Bot.hs	23;"	v
-curl_options	./Lurk/Url.hs	28;"	v	file:
-eval	./Lurk/Eval.hs	19;"	v
-extractNothing	./Lurk/Google.hs	48;"	v	file:
-extractSbiKeywords	./Lurk/Google.hs	63;"	v
-extractSearchResults	./Lurk/Google.hs	74;"	v
-extractTitle	./Lurk/Url.hs	42;"	v
-extractTopText	./Lurk/Google.hs	51;"	v
-genericSearchUrl	./Lurk/Google.hs	20;"	v	file:
-getContent	./Lurk/Url.hs	70;"	v
-getContentType	./Lurk/Url.hs	52;"	v
-getContent_	./Lurk/Url.hs	73;"	v
-getGenericResults	./Lurk/Google.hs	33;"	v	file:
-getGoogleSearchByImageUrl	./Lurk/Google.hs	26;"	v
-getGoogleSearchUrl	./Lurk/Google.hs	23;"	v
-getSbiResults	./Lurk/Google.hs	42;"	v
-getSearchResults	./Lurk/Google.hs	45;"	v
-getTitle	./Lurk/Url.hs	35;"	v
+Bot	./Lurk/Bot/Config.hs	25;"	d
+Bot	./Lurk/Bot/Config.hs	25;"	t
+BotConfig	./Lurk/Bot/Config.hs	10;"	d
+BotConfig	./Lurk/Bot/Config.hs	10;"	t
+Net	./Lurk/Bot/Config.hs	24;"	t
+channels	./Lurk/Bot/Config.hs	18;"	v
+config	./Lurk/Bot/Config.hs	27;"	v
+connect	./Lurk/Bot.hs	25;"	v
+connectLog	./Lurk/Logger.hs	18;"	v
+curl_options	./Lurk/Url.hs	20;"	v
+database	./Lurk/Bot/Config.hs	21;"	v
+db	./Lurk/Bot/Config.hs	28;"	v
+defaultLurkBot	./Lurk/Bot/Config.hs	31;"	v
+eval	./Lurk/Handler/EverythingElse.hs	11;"	v	file:
+eval	./Lurk/Handler/Google.hs	22;"	v	file:
+eval	./Lurk/Handler/Slap.hs	10;"	v	file:
+eval	./Lurk/Handler/Urls.hs	12;"	v	file:
+extractNothing	./Lurk/Google.hs	62;"	v
+extractSbiKeywords	./Lurk/Google.hs	77;"	v
+extractSearchNothing	./Lurk/Google.hs	88;"	v
+extractSearchResults	./Lurk/Google.hs	91;"	v
+extractTitle	./Lurk/Url.hs	34;"	v
+extractTopText	./Lurk/Google.hs	65;"	v
+firefoxUserAgent	./Lurk/Google.hs	24;"	v
+genericSearchUrl	./Lurk/Google.hs	27;"	v	file:
+getContent	./Lurk/Url.hs	62;"	v
+getContentType	./Lurk/Url.hs	44;"	v
+getContent_	./Lurk/Url.hs	65;"	v
+getGenericResults	./Lurk/Google.hs	40;"	v	file:
+getGoogleSearchByImageUrl	./Lurk/Google.hs	33;"	v
+getGoogleSearchUrl	./Lurk/Google.hs	30;"	v
+getSbiResults	./Lurk/Google.hs	49;"	v
+getSearchResults	./Lurk/Google.hs	56;"	v
+getTitle	./Lurk/Url.hs	27;"	v
 getUrls	./Lurk/Utils.hs	15;"	v
-handle	./Lurk/Handler.hs	11;"	v
+googleHandler	./Lurk/Handler/Google.hs	14;"	v
+handle	./Lurk/Handler.hs	9;"	v
+handlers	./Lurk/Bot/Config.hs	19;"	v
 head'	./Lurk/Utils.hs	21;"	v
 humanReadable	./Lurk/Utils.hs	29;"	v
-listen	./Lurk/Bot.hs	43;"	v
-lurkBot	lurk.hs	5;"	v
-main	./Lurk/Url.hs	18;"	v	file:
-main	lurk.hs	14;"	v
-maxRedirectFollow	./Lurk/Url.hs	25;"	v	file:
-maxSearchResults	./Lurk/Google.hs	28;"	v	file:
-maxTitleLength	./Lurk/Url.hs	22;"	v	file:
-nick	./Lurk/Bot/Config.hs	7;"	v
-port	./Lurk/Bot/Config.hs	11;"	v
+listen	./Lurk/Bot.hs	46;"	v
+logHandler	./Lurk/Handler/Logging.hs	11;"	v
+logging	./Lurk/Bot/Config.hs	20;"	v
+lurkBot	lurk.hs	11;"	v
+main	./Lurk/Url.hs	10;"	v
+main	lurk.hs	8;"	v
+maxRedirectFollow	./Lurk/Url.hs	17;"	v
+maxSearchResults	./Lurk/Google.hs	23;"	v	file:
+maxTitleLength	./Lurk/Url.hs	14;"	v
+miscHandler	./Lurk/Handler/EverythingElse.hs	16;"	v
+nick	./Lurk/Bot/Config.hs	10;"	v
+nickserv	./Lurk/Bot/Config.hs	16;"	v
+nickservpassword	./Lurk/Bot/Config.hs	17;"	v
+port	./Lurk/Bot/Config.hs	14;"	v
 prettySize	./Lurk/Utils.hs	26;"	v
 privmsg	./Lurk/Bot/IRC.hs	15;"	v
-realname	./Lurk/Bot/Config.hs	9;"	v
-run	./Lurk/Bot.hs	36;"	v
-runBot	./Lurk/Bot.hs	17;"	v
+realname	./Lurk/Bot/Config.hs	12;"	v
+run	./Lurk/Bot.hs	39;"	v
+runBot	./Lurk/Bot.hs	19;"	v
 safeIndex	./Lurk/Utils.hs	48;"	v
-server	./Lurk/Bot/Config.hs	10;"	v
-socket	./Lurk/Bot/Config.hs	16;"	v
-starttime	./Lurk/Bot/Config.hs	16;"	v
-username	./Lurk/Bot/Config.hs	8;"	v
+server	./Lurk/Bot/Config.hs	13;"	v
+slapHandler	./Lurk/Handler/Slap.hs	13;"	v
+socket	./Lurk/Bot/Config.hs	25;"	v
+ssl	./Lurk/Bot/Config.hs	15;"	v
+starttime	./Lurk/Bot/Config.hs	26;"	v
+urlHandler	./Lurk/Handler/Urls.hs	20;"	v
+username	./Lurk/Bot/Config.hs	11;"	v
 write	./Lurk/Bot/IRC.hs	9;"	v
+writeLog	./Lurk/Logger.hs	9;"	v
