@@ -12,6 +12,9 @@ import Text.Printf
 import Lurk.Bot.Config
 import Lurk.Bot.IRC
 import Lurk.Handler
+import Database.HDBC hiding (run)
+import Database.HDBC.Sqlite3 (connectSqlite3)
+
 
 runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
@@ -25,7 +28,11 @@ connect cfg = notify $ do
   h <- connectTo (server cfg) (PortNumber . fromIntegral . port $ cfg)
   forkIO $ forever $ getLine >>= hPrintf h "%s\r\n"
   hSetBuffering h NoBuffering
-  return (Bot h t cfg)
+  if (logging cfg) 
+    then return (Bot h t cfg Nothing)
+    else do
+      db <- connectSqlite3 (database cfg)
+      return (Bot h t cfg (Just db))
   where
     notify a = E.bracket_
       (printf "Connecting to %s ... " (server cfg) >> hFlush stdout)

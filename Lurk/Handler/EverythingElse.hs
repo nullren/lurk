@@ -16,7 +16,10 @@ miscHandler :: Maybe Message -> Net ()
 miscHandler msg = do
   cfg <- asks config
   case msg of
-    Just (Message _ "376" _) -> privmsg "NickServ" "identify nickservpassword"
+    Just (Message _ "376" _) 
+      -> if (nickserv cfg)
+         then privmsg "NickServ" $ "identify " ++ (nickservpassword cfg)
+         else mapM_ (\x -> write "JOIN" x) (channels cfg)
     Just (Message _ "396" _) -> mapM_ (\x -> write "JOIN" x) (channels cfg)
     Just (Message _ "433" _) -> write "NICK" (nick cfg ++ "_")
     Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))

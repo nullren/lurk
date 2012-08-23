@@ -22,4 +22,5 @@ lurkBot = defaultLurkBot
                          , miscHandler
                          ]
             , database = "/tmp/lurk.db"
+            , logging = False
             }
