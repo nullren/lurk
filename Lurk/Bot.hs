@@ -1,3 +1,5 @@
+module Lurk.Bot where
+
 import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
@@ -29,7 +31,7 @@ run = do
   write "USER" ((username cfg)++" 0 * :" ++ (realname cfg))
   asks socket >>= listen
 
-listen :: Hnadle -> Net ()
+listen :: Handle -> Net ()
 listen h = forever $ do
   s <- init `fmap` liftIO $ hGetLine h
   liftIO $ putStrLn s
