@@ -3,6 +3,7 @@ import Lurk.Bot.Config
 import Lurk.Handler.Google (googleHandler)
 import Lurk.Handler.Slap (slapHandler)
 import Lurk.Handler.Urls (urlHandler)
+import Lurk.Handler.Logging (logHandler)
 import Lurk.Handler.EverythingElse (miscHandler)
 main = runBot lurkBot
 
@@ -16,11 +17,12 @@ lurkBot = defaultLurkBot
                          ]
             , nickserv = False
             , nickservpassword = "dingdong"
-            , handlers = [ googleHandler
+            , handlers = [ logHandler
+                         , googleHandler
                          , slapHandler
                          , urlHandler
                          , miscHandler
                          ]
             , database = "/tmp/lurk.db"
-            , logging = False
+            , logging = True
             }

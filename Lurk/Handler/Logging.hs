@@ -5,6 +5,8 @@ import Lurk.Bot.Config
 import Control.Monad.Reader
 import Network.IRC hiding (nick, privmsg)
 import Data.List
+import Database.HDBC
+import Database.HDBC.Sqlite3
 
 logHandler msg = do
   cfg <- asks config
