@@ -27,12 +27,8 @@ Ubuntu. This was tested on 12.04 and all commands completed without
 errors but there were some warnings.
 
     #!/bin/sh
-    sudo apt-get -y update
+    sudo apt-get update
+    sudo apt-get install libghc-curl-dev libsqlite3-dev
     cabal update
-    cabal install irc
-    cabal install tinyurl
-    cabal install utf8-string
-    cabal install tagsoup
-    sudo apt-get -y install libghc-curl-dev
-
+    cabal install irc tinyurl utf8-string tagsoup hdbc hdbc-sqlite3
 
