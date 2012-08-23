@@ -14,12 +14,14 @@ or
 ## DEPENDENCIES
 Not sure of all the dependencies, but the following are needed
 
-   - Network.IRC `cabal install irc`
-   - Codec.Binary.UTF8.String `cabal install utf8-string`
-   - Text.HTML.TagSoup.Match `cabal install tagsoup`
-   - Network.Curl `cabal install curl`
-   - Network `cabal install network`
-   - Network.TinyURL `cabal install tinyurl`
+   - Codec.Binary.UTF8.String
+   - Database.HDBC
+   - Database.HDBC.Sqlite3
+   - Network
+   - Network.IRC
+   - Network.Curl
+   - Network.TinyURL
+   - Text.HTML.TagSoup.Match
 
 
 This is a little script to install everything needed to run the bot on
