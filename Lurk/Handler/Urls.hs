@@ -1,16 +1,23 @@
-module Lurk.Handler.Slap (slapHandler) where
+module Lurk.Handler.Urls (urlHandler) where
 
-import Lurk.Bot.IRC
-import Lurk.Bot.Config
 import Control.Monad.Reader
-import Network.IRC hiding (nick, privmsg)
 import Data.List
+import Lurk.Bot.Config
+import Lurk.Bot.IRC
+import Lurk.Url
+import Lurk.Utils
+import Network.IRC hiding (nick,privmsg)
 
 eval :: String -> String -> Net ()
-eval c x | "!slap " `isPrefixOf` x = privmsg c ("\001ACTION slaps " ++ (drop 6 x) ++ " around with a large trout!\001")
+eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do
+  title <- liftIO $ getTitle x 
+  privmsg c title 
+  ) urls
 eval _    _                        = return () -- ignore everything else
 
-slapHandler msg = do
+
+urlHandler :: Maybe Message -> Net ()
+urlHandler msg = do
   cfg <- asks config
   case msg of
     Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
