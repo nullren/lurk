@@ -1,7 +1,4 @@
-module Lurk.Config 
-( IRCConfig(..),
-  lurkBot
-) where
+module Lurk.Bot.Config where
 
 data BotConfig = BotConfig { nick :: String
                            , username :: String
@@ -12,5 +9,5 @@ data BotConfig = BotConfig { nick :: String
                            } deriving (Show)
   
 type Net = ReaderT Bot IO
-data Bot = Bot { socket :: Handle, starttime :: ClockTime }
+data Bot = Bot { socket :: Handle, starttime :: ClockTime, config :: BotConfig }
  

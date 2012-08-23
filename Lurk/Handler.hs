@@ -1,5 +1,11 @@
+module Lurk.Handle where
+
+import Lurk.Bot.Config
+
 handle :: String -> Net ()
 handle s = do
+  return ()
+{-
   case decode (s++"\r\n") of
     Nothing -> return ()
     Just msg -> case msg_command msg of
@@ -22,3 +28,4 @@ handle s = do
 
       -- do nothing
       _             -> return ()
+-}
