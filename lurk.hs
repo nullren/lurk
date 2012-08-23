@@ -4,8 +4,11 @@ import Lurk.Handler.Google (googleHandler)
 import Lurk.Handler.Slap (slapHandler)
 import Lurk.Handler.Urls (urlHandler)
 import Lurk.Handler.EverythingElse (miscHandler)
- 
-lurkBot = BotConfig "lurkdumb" --nick
+main = runBot lurkBot
+
+-- | configure your bot here!
+
+lurkBot = BotConfig "lurkbot" --nick
                     "lurkbot" --user name
                     "avocados butt" --real name
                     "chat.freenode.net"  --server
@@ -21,8 +24,4 @@ lurkBot = BotConfig "lurkdumb" --nick
                     , slapHandler
                     , urlHandler
                     , miscHandler
-                    --, quitHandler
-                    --, idHandler
                     ]
-
-main = runBot lurkBot
