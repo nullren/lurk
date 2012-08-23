@@ -27,6 +27,8 @@ eval c x | "!slap " `isPrefixOf` x = privmsg c ("\001ACTION slaps " ++ (drop 6 x
 -- give google search url
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
 
+eval c x | "!gsbi " `isPrefixOf` x = privmsg c $ getGoogleSearchByImageUrl (drop 6 x)
+{-
 eval c x | "!gsbi " `isPrefixOf` x = do
   r <- liftIO $ getSbiResults (drop 6 x) 
   mapM_ (\(t,u) -> case u of
@@ -37,6 +39,7 @@ eval c x | "!gsbi " `isPrefixOf` x = do
   --privmsg c $ case r of
    -- Nothing -> "eep nothing found"
     --Just s -> s
+-}
 
 -- use google to get some info
 eval c x | "!g " `isPrefixOf` x    = do
