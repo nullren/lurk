@@ -28,6 +28,7 @@ curl_options :: [CurlOption]
 curl_options = [CurlFollowLocation True
                , CurlMaxRedirs maxRedirectFollow
                , CurlHeader False
+               , CurlSSLVerifyPeer False
                ]
 
 getTitle :: String -> IO String
@@ -52,7 +53,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("File type: [" ++ strip t ++ "] " ++ l )
+  return $ ("File type: [" ++ strip t ++ "] " ++ prSi l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of
