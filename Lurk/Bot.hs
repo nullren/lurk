@@ -29,10 +29,10 @@ connect cfg = notify $ do
   forkIO $ forever $ getLine >>= hPrintf h "%s\r\n"
   hSetBuffering h NoBuffering
   if (logging cfg) 
-    then return (Bot h t cfg Nothing)
-    else do
+    then do
       db <- connectSqlite3 (database cfg)
       return (Bot h t cfg (Just db))
+    else return (Bot h t cfg Nothing)
   where
     notify a = E.bracket_
       (printf "Connecting to %s ... " (server cfg) >> hFlush stdout)

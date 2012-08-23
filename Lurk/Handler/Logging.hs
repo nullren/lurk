@@ -8,11 +8,13 @@ import Data.List
 import Database.HDBC
 import Database.HDBC.Sqlite3
 
-logHandler msg = do
-  cfg <- asks config
-  sql <- asks db
-  case sql of
-    Nothing -> return ()
-    Just db -> do
-      run db "insert into rawlog values (date('now'), ?)" [toSql $ encode msg]
-      commit db
+logHandler :: Maybe Message -> Net ()
+logHandler msg = case msg of
+  Nothing -> return ()
+  Just m -> do
+    sql <- asks db
+    case sql of
+      Nothing -> return ()
+      Just db -> do
+        c <- liftIO $ run db "insert into rawlog values (datetime('now'), ?)" [toSql $ encode m]
+        liftIO $ commit db
