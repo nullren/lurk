@@ -45,3 +45,7 @@ write s t = do
   h <- asks socket
   liftIO $ hPrintf h "%s %s\r\n" s t
   liftIO $ printf    "> %s %s\n" s t
+
+privmsg :: String -> String -> Net ()
+privmsg c s = write "PRIVMSG" (c ++ " :" ++ s)
+

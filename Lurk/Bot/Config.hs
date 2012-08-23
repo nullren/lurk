@@ -11,9 +11,6 @@ data BotConfig = BotConfig { nick :: String
                            , channels :: [String]
                            } deriving (Show)
   
-lurkBot :: BotConfig
-lurkBot = BotConfig "lurkbot" "lurkbot" "avocados butt"
-                      "chat.freenode.org" 6667 
-                      [ "#reddit-ucla"
-                      , "#avocadobonertrust"
-                      ]
+type Net = ReaderT Bot IO
+data Bot = Bot { socket :: Handle, starttime :: ClockTime }
+ 
