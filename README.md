@@ -33,7 +33,6 @@ errors but there were some warnings.
     cabal install tinyurl
     cabal install utf8-string
     cabal install tagsoup
-    cabal install curl
     sudo apt-get -y install libghc-curl-dev
 
 
