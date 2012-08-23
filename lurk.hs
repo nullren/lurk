@@ -5,7 +5,7 @@ lurkBot :: BotConfig
 lurkBot = BotConfig "lurkbot" --nick
                     "lurkbot" --user name
                     "avocados butt" --real name
-                    "chat.freenode.org"  --server
+                    "chat.freenode.net"  --server
                     6667 --port
                     [ "#avocadobonertrust"
                     --, "#reddit-ucla"
