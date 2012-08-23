@@ -1,0 +1,47 @@
+Bot	lurk.hs	30;"	d
+Bot	lurk.hs	30;"	t
+IRCConfig	./Lurk/Config.hs	6;"	d
+IRCConfig	./Lurk/Config.hs	6;"	t
+Net	lurk.hs	29;"	t
+channels	./Lurk/Config.hs	11;"	v
+connect	lurk.hs	45;"	v
+curl_options	./Lurk/Url.hs	28;"	v	file:
+eval	lurk.hs	116;"	v
+extractNothing	./Lurk/Google.hs	48;"	v	file:
+extractSbiKeywords	./Lurk/Google.hs	63;"	v
+extractSearchResults	./Lurk/Google.hs	74;"	v
+extractTitle	./Lurk/Url.hs	42;"	v
+extractTopText	./Lurk/Google.hs	51;"	v
+genericSearchUrl	./Lurk/Google.hs	20;"	v	file:
+getContent	./Lurk/Url.hs	70;"	v
+getContentType	./Lurk/Url.hs	52;"	v
+getContent_	./Lurk/Url.hs	73;"	v
+getGenericResults	./Lurk/Google.hs	33;"	v	file:
+getGoogleSearchByImageUrl	./Lurk/Google.hs	26;"	v
+getGoogleSearchUrl	./Lurk/Google.hs	23;"	v
+getSbiResults	./Lurk/Google.hs	42;"	v
+getSearchResults	./Lurk/Google.hs	45;"	v
+getTitle	./Lurk/Url.hs	35;"	v
+getUrls	./Lurk/Utils.hs	15;"	v
+handle	lurk.hs	89;"	v
+head'	./Lurk/Utils.hs	21;"	v
+humanReadable	./Lurk/Utils.hs	29;"	v
+listen	lurk.hs	71;"	v
+lurkBot	./Lurk/Config.hs	15;"	v
+main	./Lurk/Url.hs	18;"	v	file:
+main	lurk.hs	36;"	v
+maxRedirectFollow	./Lurk/Url.hs	25;"	v	file:
+maxSearchResults	./Lurk/Google.hs	28;"	v	file:
+maxTitleLength	./Lurk/Url.hs	22;"	v	file:
+nick	./Lurk/Config.hs	6;"	v
+port	./Lurk/Config.hs	10;"	v
+prettySize	./Lurk/Utils.hs	26;"	v
+privmsg	lurk.hs	158;"	v
+realname	./Lurk/Config.hs	8;"	v
+run	lurk.hs	62;"	v
+safeIndex	./Lurk/Utils.hs	48;"	v
+server	./Lurk/Config.hs	9;"	v
+socket	lurk.hs	30;"	v
+starttime	lurk.hs	30;"	v
+username	./Lurk/Config.hs	7;"	v
+write	lurk.hs	83;"	v

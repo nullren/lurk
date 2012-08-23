@@ -3,7 +3,7 @@ module Lurk.Config
   lurkBot
 ) where
 
-data IRCConfig = IRCConfig { nick :: String
+data BotConfig = BotConfig { nick :: String
                            , username :: String
                            , realname :: String
                            , server :: String
@@ -11,8 +11,8 @@ data IRCConfig = IRCConfig { nick :: String
                            , channels :: [String]
                            } deriving (Show)
   
-lurkBot :: IRCConfig
-lurkBot = IRCConfig "lurkbot" "lurkbot" "avocados butt"
+lurkBot :: BotConfig
+lurkBot = BotConfig "lurkbot" "lurkbot" "avocados butt"
                       "chat.freenode.org" 6667 
                       [ "#reddit-ucla"
                       , "#avocadobonertrust"
