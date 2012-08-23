@@ -1,12 +1,4 @@
-{- provide URL utilities -}
-
-module Lurk.Url (
-  getTitle,
-  getContent,
-  getContent_,
-  getContentType,
-  extractTitle
-) where
+module Lurk.Url where
 
 import Control.Monad.Reader
 import Network.Curl
@@ -53,7 +45,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("File type: [" ++ strip t ++ "] " ++ prSi l )
+  return $ ("File type: [" ++ strip t ++ "] " ++ l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of

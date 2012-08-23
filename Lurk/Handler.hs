@@ -11,24 +11,17 @@ handle :: String -> Net ()
 handle s = do
   cfg <- asks config
   case decode (s++"\r\n") of
-    Nothing -> return ()
-    Just msg -> case msg_command msg of
+    -- end of MOTD
+    Just (Message _ "376" _)
+      -> mapM_ (\x -> write "JOIN" x) (channels cfg)
 
-      -- end of MOTD
-      "376"         -> mapM_ (\x -> write "JOIN" x) (channels cfg)
+    -- nick taken
+    Just (Message _ "433" _)
+      -> write "NICK" (nick cfg ++ "_")
 
-      -- nick taken
-      "433"         -> write "NICK" (nick cfg ++ "_")
+    Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
+      -> eval tgt $ concat mess
+         where tgt = if (nick cfg) `isPrefixOf` chan then n else chan
 
-      "PRIVMSG"     -> eval tgt mess where
-                         chan = head $ msg_params msg
-                         mess = last $ msg_params msg
-                         tgt = if (nick cfg) `isPrefixOf` chan 
-                                 then case msg_prefix msg of
-                                   Nothing -> chan
-                                   Just n -> getnick n
-                                 else chan
-                         getnick (NickName s _ _) = s
-
-      -- do nothing
-      _             -> return ()
+    -- do nothing
+    _ -> return ()
