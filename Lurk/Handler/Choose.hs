@@ -3,7 +3,6 @@ module Lurk.Handler.Choose (chooseHandler) where
 import Lurk.Bot.IRC
 import Lurk.Types
 import Control.Monad.Reader
-import Network.IRC hiding (nick, privmsg)
 
 import Data.List
 import Data.List.Split

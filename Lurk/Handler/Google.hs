@@ -6,7 +6,6 @@ import Lurk.Google
 import Lurk.Url
 import Data.List
 import Network.TinyURL
-import Network.IRC hiding (privmsg,nick)
 import Control.Monad
 import Control.Monad.Reader
 

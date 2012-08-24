@@ -1,10 +1,17 @@
-module Lurk.Bot.IRC where
+module Lurk.Bot.IRC 
+  ( write
+  , privmsg
+  -- Network.IRC things
+  , decode
+  , encode
+  ) where
 
 import Control.Monad.Reader
 import Control.Monad
 import Text.Printf
 import Lurk.Types
 import qualified Data.ByteString.Lazy.Char8 as L
+import Network.IRC (decode,encode)
 
 write :: String -> String -> Net ()
 write s t = do

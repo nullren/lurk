@@ -33,7 +33,7 @@ connect_reg host port = do
   h <- connectTo host (PortNumber . fromIntegral $ port)
   hSetBuffering h NoBuffering
   return ConnInfo
-    { connRead = B.hGetContents h
+    { connRead = B.hGetLine h
     , connWrite = L.hPutStr h
     , connClose = hClose h
     }

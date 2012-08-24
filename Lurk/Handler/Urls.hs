@@ -6,7 +6,6 @@ import Lurk.Types
 import Lurk.Bot.IRC
 import Lurk.Url
 import Lurk.Utils
-import Network.IRC hiding (nick,privmsg)
 
 eval :: String -> String -> Net ()
 eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do
