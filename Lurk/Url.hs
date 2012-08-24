@@ -8,7 +8,7 @@ import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 
 maxTitleLength :: Int
-maxTitleLength = 80
+maxTitleLength = 250
 
 maxRedirectFollow :: Long
 maxRedirectFollow = 5
