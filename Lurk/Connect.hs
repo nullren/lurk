@@ -10,6 +10,9 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as L
 import System.IO
 
+connect_ :: Bool -> String -> Int -> IO ConnInfo
+connect_ ssl = if ssl then connect_ssl else connect_reg
+
 -- | Make a SSL connection to a host
 connect_ssl :: String -> Int -> IO ConnInfo
 connect_ssl host port = do

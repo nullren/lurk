@@ -1,4 +1,7 @@
-module Lurk.Bot where
+module Lurk.Bot
+  ( runBot
+  , module Lurk.Types
+  ) where
 
 import Data.List
 import Network
@@ -9,27 +12,30 @@ import Control.Monad
 import Control.Monad.Reader
 import qualified Control.Exception as E
 import Text.Printf
-import Lurk.Bot.Config
+import Lurk.Types
+import Lurk.Connect
 import Lurk.Bot.IRC
 import Lurk.Logger
 import Lurk.Handler
+import qualified Data.ByteString.Lazy.Char8 as L
+import qualified Data.ByteString.Char8 as B
 
 
 runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
   where
-    disconnect = hClose . socket
+    disconnect = connClose . connInfo
     loop s = E.catch (runReaderT run s) (\(E.SomeException e) -> putStrLn $ show e)
 
 connect :: BotConfig -> IO Bot
 connect cfg = notify $ do
   t <- getClockTime
-  h <- connectTo (server cfg) (PortNumber . fromIntegral . port $ cfg)
+  conn <- connect_ (ssl cfg) (server cfg) (port cfg)
   db <- connectLog cfg
-  forkIO $ forever $ getLine >>= hPrintf h "%s\r\n"
-  hSetBuffering h NoBuffering
-  return (Bot h t cfg db)
+  forkIO $ forever $ getLine >>= writer conn
+  return (Bot conn t cfg db)
   where
+    writer c s = (connWrite c) $ L.pack $ s ++ "\r\n"
     notify a = E.bracket_
       (printf "Connecting to %s ... " (server cfg) >> hFlush stdout)
       (putStrLn "done.")
@@ -40,11 +46,13 @@ run = do
   cfg <- asks config
   write "NICK" (nick cfg)
   write "USER" ((username cfg)++" 0 * :" ++ (realname cfg))
-  asks socket >>= listen
+  asks connInfo >>= listen
 
-listen :: Handle -> Net ()
+listen :: ConnInfo -> Net ()
 listen h = forever $ do
-  s <- init `fmap` liftIO (hGetLine h)
+  conn <- asks connInfo
+  s' <- liftIO $ connRead conn
+  let s = B.unpack s'
   liftIO $ putStrLn s
   if ping s then pong s else handle s
   where

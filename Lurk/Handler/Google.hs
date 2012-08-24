@@ -1,7 +1,7 @@
 module Lurk.Handler.Google (googleHandler) where
 
 import Lurk.Bot.IRC
-import Lurk.Bot.Config
+import Lurk.Types
 import Lurk.Google
 import Lurk.Url
 import Data.List

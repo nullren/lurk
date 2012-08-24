@@ -1,7 +1,7 @@
 module Lurk.Handler.Slap (slapHandler) where
 
 import Lurk.Bot.IRC
-import Lurk.Bot.Config
+import Lurk.Types
 import Control.Monad.Reader
 import Network.IRC hiding (nick, privmsg)
 import Data.List

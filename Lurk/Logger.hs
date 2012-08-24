@@ -1,6 +1,6 @@
 module Lurk.Logger where
 
-import Lurk.Bot.Config
+import Lurk.Types
 import Control.Monad.Reader
 import Database.HDBC
 import Database.HDBC.Sqlite3

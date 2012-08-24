@@ -1,6 +1,6 @@
 module Lurk.Handler where
 
-import Lurk.Bot.Config
+import Lurk.Types
 import Lurk.Bot.IRC
 import Network.IRC hiding (nick)
 import Control.Monad.Reader

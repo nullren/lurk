@@ -1,7 +1,7 @@
 module Lurk.Handler.Choose (chooseHandler) where
 
 import Lurk.Bot.IRC
-import Lurk.Bot.Config
+import Lurk.Types
 import Control.Monad.Reader
 import Network.IRC hiding (nick, privmsg)
 

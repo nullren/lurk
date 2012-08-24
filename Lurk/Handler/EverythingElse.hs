@@ -2,7 +2,7 @@ module Lurk.Handler.EverythingElse (miscHandler) where
 
 import Control.Monad.Reader
 import Data.List
-import Lurk.Bot.Config
+import Lurk.Types
 import Lurk.Bot.IRC
 import Network.IRC hiding (nick,privmsg)
 import System.Exit
