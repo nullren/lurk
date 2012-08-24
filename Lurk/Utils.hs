@@ -1,5 +1,6 @@
 module Lurk.Utils where
 
+import Control.Applicative
 import Control.Monad
 import Data.Char
 import Data.List
@@ -49,4 +50,4 @@ safeIndex 0 (x:_)  = Just x
 safeIndex i (_:xs) = safeIndex (i-1) xs
 
 -- | Pick a random element in a list
-pick xs = liftM (xs !!) (randomRIO (0, length xs - 1))
+pick xs = (xs !!) <$> (randomRIO (0, length xs - 1))

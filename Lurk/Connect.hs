@@ -1,5 +1,6 @@
 module Lurk.Connect where
 
+import Control.Applicative
 import Control.Monad
 import Crypto.Random
 import Lurk.Types
@@ -35,7 +36,7 @@ connectReg host port = do
   h <- connectTo host (PortNumber . fromIntegral $ port)
   hSetBuffering h NoBuffering
   return ConnInfo
-    { connRead = liftM (\x -> B.concat [x, B.pack "\n"]) (B.hGetLine h)
+    { connRead = (\x -> B.concat [x, B.pack "\n"]) <$> (B.hGetLine h)
     , connWrite = L.hPutStr h
     , connClose = hClose h
     }
