@@ -10,6 +10,9 @@ import Network.HTTP.Base
 import Control.Applicative
 
 maxSearchResults = 3 :: Int
+
+-- | Set the UserAgent to whatever will bring up Google's JavaScript
+-- enabled search page.
 firefoxUserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.77 Safari/537.1" :: String
 
 genericSearchUrl :: String -> String -> String
@@ -34,6 +37,7 @@ getGenericResults ua extractor altext uri = do
       Nothing -> return [("I don't know what I'm doing!", Nothing)]
     Just s -> return [(s, Nothing)]
 
+-- | Returns result from Google's Search By Image feature.
 getSbiResults :: String -> IO [(String, Maybe String)]
 getSbiResults u = getGenericResults 
                     firefoxUserAgent
@@ -41,6 +45,9 @@ getSbiResults u = getGenericResults
                     extractSearchNothing
                     (getGoogleSearchByImageUrl u)
 
+-- | Runs a calculation or returns Google search results. If using a
+-- UserAgent that returns a JavaScript page, extractTopText will need to
+-- be updated. Right now, updating this is on the todo list.
 getSearchResults :: String -> IO [(String,Maybe String)]
 getSearchResults u = getGenericResults "-"
                        extractTopText
@@ -50,6 +57,9 @@ getSearchResults u = getGenericResults "-"
 extractNothing :: String -> Maybe String
 extractNothing url = Nothing
 
+-- | On Javascript enabled searches, the "topstuff" div is always
+-- present even when empty. This needs to be handled correctly in such
+-- situations.
 extractTopText :: String -> Maybe String
 extractTopText = content . tags where
   tags = closing . opening . canonicalizeTags . head' . sections (~== "<div id=topstuff>") . parseTags
@@ -61,7 +71,7 @@ extractTopText = content . tags where
   maybeText "Ad" = Nothing
   maybeText t = Just (encodeString t)
 
--- get keywords from the google sbi image page
+-- | Get keywords from the Google SBI image page.
 extractSbiKeywords :: String -> Maybe String
 extractSbiKeywords = content . tags where
   tags = closing . opening . canonicalizeTags . head' . sections (~== "<div id=topstuff>") . parseTags
@@ -72,10 +82,10 @@ extractSbiKeywords = content . tags where
   maybeText [] = Nothing
   maybeText t = Just (encodeString t)
 
--- return a list of page titles and urls
 extractSearchNothing :: String -> Maybe [(String, Maybe String)]
 extractSearchNothing _ = Just [("",Nothing)]
 
+-- | Return a list of page titles and URLs.
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
 extractSearchResults p = map content <$> maybetake (tags p) where

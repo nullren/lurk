@@ -15,6 +15,7 @@ eval c x | urls@(_:_) <- getUrls x = mapM_ (\x -> do
 eval _    _                        = return () -- ignore everything else
 
 
+-- | Greedy. Every message, even commands, are searched for URLs.
 urlHandler :: Maybe Message -> Net ()
 urlHandler msg = do
   cfg <- asks config

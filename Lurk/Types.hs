@@ -54,6 +54,7 @@ data Bot = Bot
 
 type Net = ReaderT Bot IO
 
+-- | Default settings that should be overwritten.
 defaultLurkBot = BotConfig
   { nick = "lurkbot"
   , username = "lurkbot"
@@ -63,7 +64,7 @@ defaultLurkBot = BotConfig
   , nickserv = False
   , nickservpassword = "nothing!"
   , port = 6667
-  , channels = []
+  , channels = ["#avocadosbonertrust"]
   , handlers = []
   , logging = False
   , database = "lurk.db"

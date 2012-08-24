@@ -6,12 +6,12 @@ module Lurk.Bot.IRC
   , encode
   ) where
 
-import Control.Monad.Reader
 import Control.Monad
-import Text.Printf
+import Control.Monad.Reader
 import Lurk.Types
-import qualified Data.ByteString.Lazy.Char8 as L
 import Network.IRC (decode,encode)
+import qualified Data.ByteString.Lazy.Char8 as L
+import Text.Printf
 
 write :: String -> String -> Net ()
 write s t = do

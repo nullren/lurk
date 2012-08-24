@@ -3,24 +3,25 @@ module Lurk.Bot
   , module Lurk.Types
   ) where
 
-import Data.List
-import Network
-import System.IO
-import System.Time
 import Control.Concurrent
 import Control.Monad
 import Control.Monad.Reader
-import qualified Control.Exception as E
-import Text.Printf
-import Lurk.Types
-import Lurk.Connect
+import Data.List
 import Lurk.Bot.IRC
-import Lurk.Logger
+import Lurk.Connect
 import Lurk.Handler
-import qualified Data.ByteString.Lazy.Char8 as L
+import Lurk.Logger
+import Lurk.Types
+import Network
+import qualified Control.Exception as E
 import qualified Data.ByteString.Char8 as B
+import qualified Data.ByteString.Lazy.Char8 as L
+import System.IO
+import System.Time
+import Text.Printf
 
-
+-- | Start the bot by giving it configuration holding all the details of
+-- of the connection and session.
 runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
   where
@@ -48,18 +49,18 @@ run = do
   asks connInfo >>= listen
 
 listen :: ConnInfo -> Net ()
-listen h = listen_ssl h $ L.pack ""
+listen h = listenSsl h $ L.pack ""
 
-listen_ssl :: ConnInfo -> L.ByteString -> Net ()
-listen_ssl conn bs = if L.count '\n' bs > 0 then 
+listenSsl :: ConnInfo -> L.ByteString -> Net ()
+listenSsl conn bs = if L.count '\n' bs > 0 then 
     do let s' = L.takeWhile (not . (=='\r')) bs
        let s  = L.unpack s'
        liftIO $ putStrLn s
        if ping s then pong s else handle s
-       listen_ssl conn $ L.drop (2 + L.length s') bs
+       listenSsl conn $ L.drop (2 + L.length s') bs
     else
     do out <- liftIO $ connRead conn
-       listen_ssl conn $ L.concat [bs,L.pack $ B.unpack out]
+       listenSsl conn $ L.concat [bs,L.pack $ B.unpack out]
   where
     ping x = "PING :" `isPrefixOf` x
     pong x = write "PONG" (':' : drop 6 x)

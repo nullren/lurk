@@ -1,13 +1,11 @@
 module Lurk.Url where
 
+import Codec.Binary.UTF8.String
 import Control.Monad.Reader
+import Lurk.Utils
 import Network.Curl
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
-import Codec.Binary.UTF8.String
-import Lurk.Utils
-
-main = getTitle "http://google.com" >>= putStrLn
 
 maxTitleLength :: Int
 maxTitleLength = 80
@@ -22,6 +20,8 @@ curl_options = [CurlFollowLocation True
                , CurlSSLVerifyPeer False
                ]
 
+-- | Returns the title of a page. If there is no title element, look up
+-- the returned mime-type and size of the file.
 getTitle :: String -> IO String
 getTitle uri = do
   c <- getContent_ [CurlRange "0-2048"] uri
@@ -29,6 +29,7 @@ getTitle uri = do
     Just title -> return title
     Nothing -> getContentType uri
 
+-- | Looks for the text in the HTML title tag.
 extractTitle :: String -> Maybe String
 extractTitle = content . tags where
   tags = closing . opening . canonicalizeTags . parseTags
@@ -39,6 +40,7 @@ extractTitle = content . tags where
   maybeText [] = Nothing
   maybeText t = Just ("Title: " ++ take maxTitleLength (encodeString t))
 
+-- | Returns mime-type and file size of a particular URL.
 getContentType :: String -> IO String
 getContentType uri = do
   a <- curlHead uri curl_options
@@ -57,6 +59,7 @@ getContentType uri = do
   strip = unwords . words
   prSi = prettySize . (\x -> read x :: Integer) . strip
 
+-- | Download contents of a URL.
 getContent :: String -> IO String
 getContent = getContent_ []
 

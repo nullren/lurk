@@ -1,11 +1,10 @@
 import Lurk.Bot
-
+import Lurk.Handler.Choose (chooseHandler)
+import Lurk.Handler.EverythingElse (miscHandler)
 import Lurk.Handler.Google (googleHandler)
+import Lurk.Handler.Logging (logHandler)
 import Lurk.Handler.Slap (slapHandler)
 import Lurk.Handler.Urls (urlHandler)
-import Lurk.Handler.Logging (logHandler)
-import Lurk.Handler.EverythingElse (miscHandler)
-import Lurk.Handler.Choose (chooseHandler)
 
 main = runBot lurkBot
 

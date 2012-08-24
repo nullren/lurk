@@ -10,7 +10,7 @@ import Data.List
 import Data.Char
 import Text.Printf
 
--- just something stupid to fetch a list of urls in a string
+-- | Just something stupid to fetch a list of urls in a string.
 getUrls :: String -> [String]
 getUrls = filter crit . words where
   crit = theshits . low
@@ -21,10 +21,12 @@ getUrls = filter crit . words where
 head' [] = []
 head' s = head s
 
--- something to make numbers have pretty things in them
+-- | Convert a number to a humanreadable IEC prefix number.
 prettySize :: (Integral a) => a -> String
 prettySize x = humanReadable (realToFrac x) 1024 0
 
+-- | Converts a number to a humanreadable format. Can take standard or
+-- IEC format (or other arbitrary bases).
 humanReadable :: Double -> Double -> Int -> String
 humanReadable num base power
   | num < 0    = "Negative file size!"
@@ -44,7 +46,11 @@ humanReadable num base power
     suffix 8 = "Y" -- yotta
     suffix _ = "?"
 
+-- | A safe way to get a specific element in a list.
 safeIndex :: Int -> [a] -> Maybe a
 safeIndex _ []     = Nothing
 safeIndex 0 (x:_)  = Just x
 safeIndex i (_:xs) = safeIndex (i-1) xs
+
+-- | Pick a random element in a list
+pick xs = liftM (xs !!) (randomRIO (0, length xs - 1))

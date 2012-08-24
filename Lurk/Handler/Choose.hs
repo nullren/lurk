@@ -2,13 +2,10 @@ module Lurk.Handler.Choose (chooseHandler) where
 
 import Lurk.Bot.IRC
 import Lurk.Types
+import Lurk.Utils
 import Control.Monad.Reader
-
 import Data.List
 import Data.List.Split
-import System.Random
-
-pick xs = liftM (xs !!) (randomRIO (0, length xs - 1))
 
 chooseHandler :: Maybe Message -> Net ()
 chooseHandler msg = do

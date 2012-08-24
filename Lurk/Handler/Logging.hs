@@ -7,6 +7,7 @@ import Control.Monad.Reader
 import Network.IRC hiding (nick, privmsg)
 import Data.List
 
+-- | Log everything.
 logHandler :: Maybe Message -> Net ()
 logHandler msg = case msg of
   Nothing -> return ()

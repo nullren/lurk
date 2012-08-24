@@ -11,6 +11,9 @@ eval _    "!quit"                  = write "QUIT" ":Exiting" >> liftIO exitSucce
 eval c x | "!id " `isPrefixOf` x   = privmsg c (drop 4 x)
 eval _    _                        = return () -- ignore everything else
 
+-- | Need to put these in better places, but for now they are sitting
+-- here. This is where we tell the bot to Join channels and change its
+-- nick if the nick is taken.
 miscHandler :: Maybe Message -> Net ()
 miscHandler msg = do
   cfg <- asks config
