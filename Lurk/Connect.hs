@@ -1,6 +1,7 @@
 module Lurk.Connect where
 
 import Crypto.Random
+import Control.Monad
 import Lurk.Types
 import Network
 import Network.TLS
@@ -11,14 +12,14 @@ import qualified Data.ByteString.Lazy.Char8 as L
 import System.IO
 
 connect_ :: Bool -> String -> Int -> IO ConnInfo
-connect_ ssl = if ssl then connect_ssl else connect_reg
+connect_ ssl = if ssl then connectSsl else connectReg
 
 -- | Make a SSL connection to a host
-connect_ssl :: String -> Int -> IO ConnInfo
-connect_ssl host port = do
+connectSsl :: String -> Int -> IO ConnInfo
+connectSsl host port = do
   gen <- newGenIO :: IO SystemRandom
   ctx <- connectionClient host (show port) params gen
-  E.catch (handshake ctx) (\(E.SomeException e) -> putStrLn $ show e)
+  E.catch (handshake ctx) (\(E.SomeException e) -> print e)
   return ConnInfo
     { connRead = recvData ctx
     , connWrite = sendData ctx
@@ -28,12 +29,12 @@ connect_ssl host port = do
     params = defaultParamsClient {pCiphers = ciphersuite_all}
 
 -- | Make a plaintext connection to a host
-connect_reg :: String -> Int -> IO ConnInfo
-connect_reg host port = do
+connectReg :: String -> Int -> IO ConnInfo
+connectReg host port = do
   h <- connectTo host (PortNumber . fromIntegral $ port)
   hSetBuffering h NoBuffering
   return ConnInfo
-    { connRead = B.hGetLine h >>= return . (\x -> B.concat [x, B.pack "\n"])
+    { connRead = liftM (\x -> B.concat [x, B.pack "\n"]) (B.hGetLine h)
     , connWrite = L.hPutStr h
     , connClose = hClose h
     }

@@ -25,7 +25,7 @@ runBot :: BotConfig -> IO ()
 runBot cfg = E.bracket (connect cfg) disconnect loop
   where
     disconnect = connClose . connInfo
-    loop s = E.catch (runReaderT run s) (\(E.SomeException e) -> (print e))
+    loop s = E.catch (runReaderT run s) (\(E.SomeException e) -> print e)
 
 connect :: BotConfig -> IO Bot
 connect cfg = notify $ do
