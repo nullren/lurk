@@ -1,13 +1,9 @@
-module Lurk.Utils 
-  ( getUrls
-  , head'
-  , prettySize
-  , humanReadable
-  , safeIndex
-  ) where
+module Lurk.Utils where
 
-import Data.List
+import Control.Monad
 import Data.Char
+import Data.List
+import System.Random
 import Text.Printf
 
 -- | Just something stupid to fetch a list of urls in a string.
