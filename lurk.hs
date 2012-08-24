@@ -12,9 +12,10 @@ main = runBot lurkBot
 -- | configure your bot here!
 lurkBot = defaultLurkBot
             { nick = "lurkbot"
-            , server = "chat.freenode.net"
-            , port = 6667
-            , channels = [ "#avocadobonertrust"
+            , server = "irc.starfyre.net"
+            , port = 6697
+            , ssl = True
+            , channels = [ "#mathematics"
                          --, "#reddit-ucla"
                          ]
             , nickserv = False

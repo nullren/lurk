@@ -6,8 +6,8 @@ import Network
 import Network.TLS
 import Network.TLS.Extra
 import qualified Control.Exception as E
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as L
+import qualified Data.ByteString.Char8 as B
+import qualified Data.ByteString.Lazy.Char8 as L
 import System.IO
 
 connect_ :: Bool -> String -> Int -> IO ConnInfo
@@ -33,7 +33,7 @@ connect_reg host port = do
   h <- connectTo host (PortNumber . fromIntegral $ port)
   hSetBuffering h NoBuffering
   return ConnInfo
-    { connRead = B.hGetLine h
+    { connRead = B.hGetLine h >>= return . (\x -> B.concat [x, B.pack "\n"])
     , connWrite = L.hPutStr h
     , connClose = hClose h
     }
