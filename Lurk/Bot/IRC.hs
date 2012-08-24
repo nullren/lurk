@@ -16,7 +16,7 @@ import Network.IRC (decode,encode)
 write :: String -> String -> Net ()
 write s t = do
   c <- asks connInfo
-  liftIO $ (connWrite c) $ L.pack $ printf "%s %s\r\n" s t
+  liftIO $ connWrite c $ L.pack $ printf "%s %s\r\n" s t
   liftIO $ printf    "> %s %s\n" s t
 
 privmsg :: String -> String -> Net ()
