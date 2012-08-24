@@ -38,7 +38,7 @@ getGenericResults :: String
                   -> String
                   -> IO [(String, Maybe String)]
 getGenericResults ua extractor altext uri = do
-  r <- getContent_ [CurlUserAgent ua] $ uri
+  r <- getContent_ [CurlUserAgent ua] uri
   case extractor r of
     Nothing -> case altext r of
       Just s -> return s
@@ -89,7 +89,7 @@ extractSearchNothing _ = Just [("",Nothing)]
 
 extractSearchResults :: String -> Maybe [(String, Maybe String)]
 extractSearchResults [] = Nothing
-extractSearchResults p = map content <$> (maybetake $ tags p) where
+extractSearchResults p = map content <$> maybetake (tags p) where
   -- searches for the list items in search results
   tags = listitems . closing . opening . search
   search = head' . sections (~== "<div id=search>") . canonicalizeTags . parseTags
@@ -99,7 +99,7 @@ extractSearchResults p = map content <$> (maybetake $ tags p) where
   -- append the domain to each of the urls and return them with the url
   -- text
   content s = do
-    let url = ((++) "http://google.com" $ getanchor $ opentitle s)
+    let url = (++) "http://google.com" $ getanchor $ opentitle s
     ((innerText . closetitle . opentitle) s , Just url)
   opentitle = dropWhile (not . tagOpenLit "h3" (const True))
   getanchor = fromAttrib "href" . head . dropWhile (not . tagOpenLit "a" (const True))
