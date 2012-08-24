@@ -8,7 +8,7 @@ import Data.List
 import Data.List.Split
 import System.Random
 
-pick xs = randomRIO (0, (length xs - 1)) >>= return . (xs !!)
+pick xs = liftM (xs !!) (randomRIO (0, length xs - 1))
 
 chooseHandler :: Maybe Message -> Net ()
 chooseHandler msg = do
@@ -16,9 +16,9 @@ chooseHandler msg = do
   case msg of
 
     Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
-      | "!c " `isPrefixOf` (concat mess)
-      -> (liftIO . pick . (splitOn " or ")) m >>= privmsg tgt
-         where tgt = if (nick cfg) `isPrefixOf` chan then n else chan
+      | "!c " `isPrefixOf` concat mess
+      -> (liftIO . pick . splitOn " or ") m >>= privmsg tgt
+         where tgt = if nick cfg `isPrefixOf` chan then n else chan
                m = drop 3 $ concat mess
 
     _ -> return ()
