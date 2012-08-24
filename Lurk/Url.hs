@@ -7,8 +7,7 @@ import Text.HTML.TagSoup.Match
 import Codec.Binary.UTF8.String
 import Lurk.Utils
 
-main = do
-  getTitle "http://google.com" >>= putStrLn
+main = getTitle "http://google.com" >>= putStrLn
 
 maxTitleLength :: Int
 maxTitleLength = 80
@@ -28,7 +27,7 @@ getTitle uri = do
   c <- getContent_ [CurlRange "0-2048"] uri
   case extractTitle c of
     Just title -> return title
-    Nothing -> getContentType uri >>= return
+    Nothing -> getContentType uri
 
 extractTitle :: String -> Maybe String
 extractTitle = content . tags where
@@ -45,7 +44,7 @@ getContentType uri = do
   a <- curlHead uri curl_options
   t <- getContentTypeHdr a
   l <- getContentLenHdr a
-  return $ ("File type: [" ++ strip t ++ "] " ++ l )
+  return ("File type: [" ++ strip t ++ "] " ++ l )
  where
   getContentTypeHdr :: (String, [(String, String)]) -> IO String
   getContentTypeHdr (_, h) = case lookup "Content-Type" h of
