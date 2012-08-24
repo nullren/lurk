@@ -1,15 +1,4 @@
-module Lurk.Google (
-  getGoogleSearchUrl,
-  getGoogleSearchByImageUrl,
-  getSearchResults,
-  getSbiResults,
-  extractTopText,
-  extractNothing,
-  extractSbiKeywords,
-  extractSearchResults,
-  extractSearchNothing,
-  firefoxUserAgent
-) where
+module Lurk.Google where
 
 import Lurk.Url
 import Lurk.Utils
