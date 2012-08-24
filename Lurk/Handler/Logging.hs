@@ -1,11 +1,11 @@
 module Lurk.Handler.Logging (logHandler) where
 
-import Lurk.Bot.IRC
-import Lurk.Types
-import Lurk.Logger
 import Control.Monad.Reader
-import Network.IRC hiding (nick, privmsg)
 import Data.List
+import Lurk.Bot.IRC
+import Lurk.Logger
+import Lurk.Types
+import Network.IRC hiding (nick, privmsg)
 
 -- | Log everything.
 logHandler :: Maybe Message -> Net ()

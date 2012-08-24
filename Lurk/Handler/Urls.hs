@@ -2,8 +2,8 @@ module Lurk.Handler.Urls (urlHandler) where
 
 import Control.Monad.Reader
 import Data.List
-import Lurk.Types
 import Lurk.Bot.IRC
+import Lurk.Types
 import Lurk.Url
 import Lurk.Utils
 

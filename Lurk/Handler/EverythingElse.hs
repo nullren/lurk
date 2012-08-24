@@ -2,8 +2,8 @@ module Lurk.Handler.EverythingElse (miscHandler) where
 
 import Control.Monad.Reader
 import Data.List
-import Lurk.Types
 import Lurk.Bot.IRC
+import Lurk.Types
 import System.Exit
 
 eval :: String -> String -> Net ()

@@ -1,9 +1,9 @@
 module Lurk.Handler.Slap (slapHandler) where
 
-import Lurk.Bot.IRC
-import Lurk.Types
 import Control.Monad.Reader
 import Data.List
+import Lurk.Bot.IRC
+import Lurk.Types
 
 eval :: String -> String -> Net ()
 eval c x | "!slap " `isPrefixOf` x = privmsg c ("\001ACTION slaps " ++ drop 6 x ++ " around with a large trout!\001")

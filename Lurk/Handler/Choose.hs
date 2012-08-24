@@ -1,11 +1,11 @@
 module Lurk.Handler.Choose (chooseHandler) where
 
-import Lurk.Bot.IRC
-import Lurk.Types
-import Lurk.Utils
 import Control.Monad.Reader
 import Data.List
 import Data.List.Split
+import Lurk.Bot.IRC
+import Lurk.Types
+import Lurk.Utils
 
 chooseHandler :: Maybe Message -> Net ()
 chooseHandler msg = do

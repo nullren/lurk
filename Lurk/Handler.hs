@@ -1,8 +1,8 @@
 module Lurk.Handler where
 
-import Lurk.Types
-import Lurk.Bot.IRC
 import Control.Monad.Reader
+import Lurk.Bot.IRC
+import Lurk.Types
 
 -- | Processes the string in each of the handlers listed in BotConfig.
 -- Ideally, I would like them to run in order and stop at the first one

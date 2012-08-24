@@ -1,9 +1,9 @@
 module Lurk.Logger where
 
-import Lurk.Types
 import Control.Monad.Reader
 import Database.HDBC
 import Database.HDBC.Sqlite3
+import Lurk.Types
 
 writeLog :: String -> Net ()
 writeLog s = do

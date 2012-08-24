@@ -1,14 +1,13 @@
 module Lurk.Handler.Google (googleHandler) where
 
-import Lurk.Bot.IRC
-import Lurk.Types
-import Lurk.Google
-import Lurk.Url
-import Data.List
-import Network.TinyURL
 import Control.Monad
 import Control.Monad.Reader
-
+import Data.List
+import Lurk.Bot.IRC
+import Lurk.Google
+import Lurk.Types
+import Lurk.Url
+import Network.TinyURL
 
 googleHandler msg = do
   cfg <- asks config

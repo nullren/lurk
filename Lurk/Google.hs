@@ -1,13 +1,13 @@
 module Lurk.Google where
 
+import Codec.Binary.UTF8.String
+import Control.Applicative
 import Lurk.Url
 import Lurk.Utils
-import Text.HTML.TagSoup
-import Text.HTML.TagSoup.Match
-import Codec.Binary.UTF8.String
 import Network.Curl
 import Network.HTTP.Base
-import Control.Applicative
+import Text.HTML.TagSoup
+import Text.HTML.TagSoup.Match
 
 maxSearchResults = 3 :: Int
 
