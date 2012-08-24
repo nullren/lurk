@@ -14,8 +14,8 @@ import Text.Printf
 getUrls :: String -> [String]
 getUrls = filter crit . words where
   crit = theshits . low
-  theshits x = ((isPrefixOf "http://") x && ((>7) . length) x)
-             ||((isPrefixOf "https://") x && ((>8) . length) x)
+  theshits x = (isPrefixOf "http://" x && ((>7) . length) x)
+             ||(isPrefixOf "https://" x && ((>8) . length) x)
   low = map toLower
 
 head' [] = []
