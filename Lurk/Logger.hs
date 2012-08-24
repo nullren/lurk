@@ -15,7 +15,7 @@ writeLog s = do
       liftIO $ commit db
 
 connectLog :: BotConfig -> IO (Maybe Connection)
-connectLog cfg = if (logging cfg)
+connectLog cfg = if logging cfg
     then do
       db <- connectSqlite3 (database cfg)
       return $ Just db
