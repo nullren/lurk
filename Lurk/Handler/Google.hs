@@ -15,7 +15,7 @@ googleHandler msg = do
   case msg of
     Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
       -> eval tgt $ concat mess
-         where tgt = if (nick cfg) `isPrefixOf` chan then n else chan
+         where tgt = if nick cfg `isPrefixOf` chan then n else chan
     _ -> return ()
 
 eval c x | "!gs " `isPrefixOf` x   = privmsg c $ getGoogleSearchUrl (drop 4 x)
