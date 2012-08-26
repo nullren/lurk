@@ -1,0 +1,29 @@
+name:            lurk
+version:         0.0
+synopsis:        Lurk IRC Library and Executable
+license:         BSD3
+author:          Renning Bruns <ren@linux.ucla.edu>
+homepage:        https://github.com/nullren/lurk
+build-type:      Simple
+cabal-version:   >= 1.2
+
+library
+  build-depends:
+    Codec.Binary.UTF8.String
+    Database.HDBC
+    Database.HDBC.Sqlite3
+    Network
+    Network.Curl
+    Network.IRC
+    Network.TinyURL
+    Network.TLS
+    Network.TLS.Extra
+    Text.HTML.TagSoup.Match
+
+  exposed-modules:
+    Lurk.Bot
+
+executable lurk
+  main-is:         lurk.hs
+  hs-source-dirs:  src
+  other-modules:
