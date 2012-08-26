@@ -6,11 +6,10 @@ import Lurk.Handler
 import Lurk.Types
 import Lurk.Utils
 
-choose = Handler
-  { kind = "PRIVMSG"
-  , condition = isPrefixOf "!c "
-  , response = \(nick, message) -> pick . splitOn " or " $ drop 3 message
+choose = msgHandler
+  { condition = isPrefixOf "!c "
+  , response = \(nick, message) -> pick . (map Just) .  splitOn " or " $ drop 3 message
   }
 
 chooseHandler :: Maybe Message -> Net ()
-chooseHandler = msgHandler_ choose
+chooseHandler = handler choose

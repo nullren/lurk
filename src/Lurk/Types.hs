@@ -4,6 +4,7 @@ module Lurk.Types
   , Bot(..)
   , Net
   , Handler(..)
+  , msgHandler
 
   -- Network.IRC
   , Message(..)
@@ -56,5 +57,10 @@ type Net = ReaderT Bot IO
 
 data Handler = Handler { kind :: String
                        , condition :: String -> Bool
-                       , response :: (String, String) -> IO String
+                       , response :: (String, String) -> IO (Maybe String)
                        }
+
+msgHandler = Handler { kind = "PRIVMSG"
+                     , condition = const False
+                     , response = \_ -> return Nothing
+                     }
