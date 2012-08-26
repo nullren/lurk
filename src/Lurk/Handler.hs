@@ -13,7 +13,8 @@ handle s = do
   cfg <- asks config
   sequence_ $ fmap ($ decode (s++"\r\n")) (handlers cfg)
 
--- | Function to simplify the declaration of message handlers
+-- | Function to simplify the declaration of message handlers. The goal
+-- should be to remove this eventually and have handle do everything.
 handler :: Handler -> Maybe Message -> Net ()
 handler h m = do
   case h of
