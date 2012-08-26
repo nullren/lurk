@@ -1,6 +1,7 @@
 module Lurk.Bot
   ( runBot
   , module Lurk.Types
+  , module Lurk.Handlers
   ) where
 
 import Control.Concurrent
@@ -10,6 +11,7 @@ import Data.List
 import Lurk.Bot.IRC
 import Lurk.Connect
 import Lurk.Handler
+import Lurk.Handlers
 import Lurk.Logger
 import Lurk.Types
 import Network
