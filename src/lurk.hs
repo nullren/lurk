@@ -1,3 +1,5 @@
+module Main (main) where
+
 import Lurk.Bot
 import Lurk.Handler.Choose (chooseHandler)
 import Lurk.Handler.EverythingElse (miscHandler)
