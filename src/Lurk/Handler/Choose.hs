@@ -1,21 +1,16 @@
 module Lurk.Handler.Choose (chooseHandler) where
 
-import Control.Monad.Reader
 import Data.List
 import Data.List.Split
-import Lurk.Bot.IRC
+import Lurk.Handler
 import Lurk.Types
 import Lurk.Utils
 
+choose = Handler
+  { kind = "PRIVMSG"
+  , condition = isPrefixOf "!c "
+  , response = \(nick, message) -> pick . splitOn " or " $ drop 3 message
+  }
+
 chooseHandler :: Maybe Message -> Net ()
-chooseHandler msg = do
-  cfg <- asks config
-  case msg of
-
-    Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
-      | "!c " `isPrefixOf` concat mess
-      -> (liftIO . pick . splitOn " or ") m >>= privmsg tgt
-         where tgt = if nick cfg `isPrefixOf` chan then n else chan
-               m = drop 3 $ concat mess
-
-    _ -> return ()
+chooseHandler = msgHandler_ choose

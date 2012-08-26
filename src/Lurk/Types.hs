@@ -3,6 +3,7 @@ module Lurk.Types
   , BotConfig(..)
   , Bot(..)
   , Net
+  , Handler(..)
 
   -- Network.IRC
   , Message(..)
@@ -52,3 +53,8 @@ data Bot = Bot
   }
 
 type Net = ReaderT Bot IO
+
+data Handler = Handler { kind :: String
+                       , condition :: String -> Bool
+                       , response :: (String, String) -> IO String
+                       }
