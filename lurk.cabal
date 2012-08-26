@@ -26,8 +26,8 @@ library
     , irc
     , tagsoup
     , TinyURL
-    , tls
-    , tls-extra
+    , tls>=1.0
+    , tls-extra>=0.5
     , utf8-string
 
   exposed-modules:
@@ -58,6 +58,6 @@ executable lurk
     , irc
     , tagsoup
     , TinyURL
-    , tls
-    , tls-extra
+    , tls>=1.0
+    , tls-extra>=0.5
     , utf8-string
