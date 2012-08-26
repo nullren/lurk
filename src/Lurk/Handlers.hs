@@ -1,5 +1,5 @@
 module Lurk.Handlers 
-  ( defaultHandlers
+  ( allHandlers
   , module Lurk.Handler.Choose
   , module Lurk.Handler.EverythingElse
   , module Lurk.Handler.Google
@@ -15,10 +15,10 @@ import Lurk.Handler.Logging (logHandler)
 import Lurk.Handler.Slap (slapHandler)
 import Lurk.Handler.Urls (urlHandler)
 
-defaultHandlers = [ logHandler
-                  , googleHandler
-                  , slapHandler
-                  , chooseHandler
-                  , miscHandler
-                  , urlHandler
-                  ]
+allHandlers = [ logHandler
+              , googleHandler
+              , slapHandler
+              , chooseHandler
+              , miscHandler
+              , urlHandler
+              ]

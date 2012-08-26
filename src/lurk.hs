@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Lurk.Bot
+import Lurk.Bot.Defaults
 
 main = runBot lurkBot
 
