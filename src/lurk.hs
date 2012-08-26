@@ -16,6 +16,4 @@ lurkBot = defaultLurkBot
                           ]
   , nickserv            = False
   , nickservpassword    = "password"
-  , database            = "/tmp/lurk.db"
-  , logging             = False
   }
