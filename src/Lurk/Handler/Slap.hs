@@ -4,6 +4,7 @@ import Data.List
 import Lurk.Types
 import Lurk.Handler
 
+isSlapCommand c = "!slap " `isPrefixOf` c
 
 victims = tail . words
 
@@ -14,9 +15,11 @@ build = act . unwords
 justSlap [] = Nothing
 justSlap ms = Just (build ms)
 
+slapPeople (nick, message) = justSlap (victims message)
+
 slap = msgHandler
-  { condition = isPrefixOf "!slap "
-  , response = \(n, m) -> return $ justSlap (victims m)
+  { condition = isSlapCommand
+  , response = return . slapPeople
   }
 
 slapHandler = handler slap
