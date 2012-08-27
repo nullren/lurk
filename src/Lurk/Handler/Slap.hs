@@ -15,6 +15,7 @@ build = act . unwords
 justSlap [] = Nothing
 justSlap ms = Just (build ms)
 
+slapPeople :: (String, String) -> Maybe String
 slapPeople (nick, message) = justSlap (victims message)
 
 slap = msgHandler
