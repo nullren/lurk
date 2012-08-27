@@ -11,8 +11,8 @@ act	./Lurk/Handler/Slap.hs	11;"	v	file:
 allHandlers	./Lurk/Handlers.hs	18;"	v
 build	./Lurk/Handler/Slap.hs	13;"	v	file:
 channels	./Lurk/Types.hs	43;"	v
-choose	./Lurk/Handler/Choose.hs	9;"	v	file:
-chooseHandler	./Lurk/Handler/Choose.hs	15;"	v
+choose	./Lurk/Handler/Choose.hs	15;"	v	file:
+chooseHandler	./Lurk/Handler/Choose.hs	20;"	v
 condition	./Lurk/Types.hs	59;"	v
 config	./Lurk/Types.hs	52;"	v
 connClose	./Lurk/Types.hs	31;"	v
@@ -24,7 +24,8 @@ connectLog	./Lurk/Logger.hs	18;"	v
 connectReg	./Lurk/Connect.hs	35;"	v
 connectSsl	./Lurk/Connect.hs	21;"	v
 connect_	./Lurk/Connect.hs	17;"	v
-curl_options	./Lurk/Url.hs	17;"	v
+curlGetString	./Lurk/Url.hs	77;"	v
+curl_options	./Lurk/Url.hs	18;"	v
 database	./Lurk/Types.hs	46;"	v
 db	./Lurk/Types.hs	53;"	v
 defaultHandlers	./Lurk/Bot/Defaults.hs	7;"	v
@@ -36,19 +37,19 @@ extractNothing	./Lurk/Google.hs	58;"	v
 extractSbiKeywords	./Lurk/Google.hs	76;"	v
 extractSearchNothing	./Lurk/Google.hs	86;"	v
 extractSearchResults	./Lurk/Google.hs	90;"	v
-extractTitle	./Lurk/Url.hs	34;"	v
+extractTitle	./Lurk/Url.hs	35;"	v
 extractTopText	./Lurk/Google.hs	64;"	v
 firefoxUserAgent	./Lurk/Google.hs	16;"	v
 genericSearchUrl	./Lurk/Google.hs	19;"	v
-getContent	./Lurk/Url.hs	64;"	v
-getContentType	./Lurk/Url.hs	45;"	v
-getContent_	./Lurk/Url.hs	67;"	v
+getContent	./Lurk/Url.hs	65;"	v
+getContentType	./Lurk/Url.hs	46;"	v
+getContent_	./Lurk/Url.hs	68;"	v
 getGenericResults	./Lurk/Google.hs	32;"	v
 getGoogleSearchByImageUrl	./Lurk/Google.hs	25;"	v
 getGoogleSearchUrl	./Lurk/Google.hs	22;"	v
 getSbiResults	./Lurk/Google.hs	42;"	v
 getSearchResults	./Lurk/Google.hs	52;"	v
-getTitle	./Lurk/Url.hs	26;"	v
+getTitle	./Lurk/Url.hs	27;"	v
 getUrls	./Lurk/Utils.hs	12;"	v
 googleHandler	./Lurk/Handler/Google.hs	12;"	v
 handle	./Lurk/Handler.hs	12;"	v
@@ -56,6 +57,7 @@ handler	./Lurk/Handler.hs	19;"	v
 handlers	./Lurk/Types.hs	44;"	v
 head'	./Lurk/Utils.hs	18;"	v
 humanReadable	./Lurk/Utils.hs	28;"	v
+isChoose	./Lurk/Handler/Choose.hs	10;"	v	file:
 isSlapCommand	./Lurk/Handler/Slap.hs	7;"	v	file:
 justSlap	./Lurk/Handler/Slap.hs	15;"	v	file:
 kind	./Lurk/Types.hs	58;"	v
@@ -65,9 +67,9 @@ logHandler	./Lurk/Handler/Logging.hs	12;"	v
 logging	./Lurk/Types.hs	45;"	v
 lurkBot	lurk.hs	9;"	v	file:
 main	lurk.hs	6;"	v
-maxRedirectFollow	./Lurk/Url.hs	14;"	v
+maxRedirectFollow	./Lurk/Url.hs	15;"	v
 maxSearchResults	./Lurk/Google.hs	12;"	v
-maxTitleLength	./Lurk/Url.hs	11;"	v
+maxTitleLength	./Lurk/Url.hs	12;"	v
 miscHandler	./Lurk/Handler/EverythingElse.hs	18;"	v
 msgHandler	./Lurk/Types.hs	63;"	v
 nick	./Lurk/Types.hs	35;"	v
@@ -77,6 +79,7 @@ pick	./Lurk/Utils.hs	53;"	v
 port	./Lurk/Types.hs	39;"	v
 prettySize	./Lurk/Utils.hs	23;"	v
 privmsg	./Lurk/Bot/IRC.hs	23;"	v
+randomChoice	./Lurk/Handler/Choose.hs	13;"	v	file:
 realname	./Lurk/Types.hs	37;"	v
 response	./Lurk/Types.hs	60;"	v
 run	./Lurk/Bot.hs	47;"	v	file:

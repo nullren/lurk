@@ -51,18 +51,18 @@ run = do
   asks connInfo >>= listen
 
 listen :: ConnInfo -> Net ()
-listen h = listenSsl h $ L.pack ""
+listen h = listen' h $ L.pack ""
 
-listenSsl :: ConnInfo -> L.ByteString -> Net ()
-listenSsl conn bs = if L.count '\n' bs > 0 then 
+listen' :: ConnInfo -> L.ByteString -> Net ()
+listen' conn bs = if L.count '\n' bs > 0 then 
     do let s' = L.takeWhile (not . (=='\r')) bs
        let s  = L.unpack s'
        liftIO $ putStrLn s
        if ping s then pong s else handle s
-       listenSsl conn $ L.drop (2 + L.length s') bs
+       listen' conn $ L.drop (2 + L.length s') bs
     else
     do out <- liftIO $ connRead conn
-       listenSsl conn $ L.concat [bs,L.pack $ B.unpack out]
+       listen' conn $ L.concat [bs,L.pack $ B.unpack out]
   where
     ping x = "PING :" `isPrefixOf` x
     pong x = write "PONG" (':' : drop 6 x)

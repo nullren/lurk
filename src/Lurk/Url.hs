@@ -2,8 +2,9 @@ module Lurk.Url where
 
 import Codec.Binary.UTF8.String
 import Control.Monad.Reader
+import Data.IORef
 import Lurk.Utils
-import Network.Curl
+import Network.Curl hiding (curlGetString)
 import Text.HTML.TagSoup
 import Text.HTML.TagSoup.Match
 
@@ -67,4 +68,21 @@ getContent_ :: [CurlOption] -> String -> IO String
 getContent_ opts uri = do
   (_,c) <- curlGetString uri (curl_options ++ opts)
   return c
+
+-- | 'curlGetString' performs the same request as 'curlGet', but 
+-- returns the response body as a Haskell string.
+curlGetString :: URLString
+              -> [CurlOption]
+              -> IO (CurlCode, String)
+curlGetString url opts = initialize >>= \ h -> do
+  ref <- newIORef []
+   -- Note: later options may (and should, probably) override these defaults.
+  setopt h (CurlFailOnError True)
+  setDefaultSSLOpts h url
+  setopt h (CurlURL url)
+  setopt h (CurlWriteFunction (gatherOutput ref))
+  mapM_ (setopt h) opts
+  rc <- perform h
+  lss <- readIORef ref
+  return (rc, concat $ reverse lss)
 
