@@ -23,7 +23,7 @@ handler h m = do
       cfg <- asks config
       case m of
         Just (Message (Just (NickName n _ _)) "PRIVMSG" (chan:mess))
-          | condition h $ concat mess
+          | condition h $ (n, concat mess)
           -> do r <- liftIO (response h (n, concat mess))
                 case r of
                   Nothing -> return ()

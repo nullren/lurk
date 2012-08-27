@@ -56,7 +56,7 @@ data Bot = Bot
 type Net = ReaderT Bot IO
 
 data Handler = Handler { kind :: String
-                       , condition :: String -> Bool
+                       , condition :: (String, String) -> Bool
                        , response :: (String, String) -> IO (Maybe String)
                        }
 

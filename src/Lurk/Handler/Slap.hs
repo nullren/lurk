@@ -4,7 +4,7 @@ import Data.List
 import Lurk.Types
 import Lurk.Handler
 
-isSlapCommand c = "!slap " `isPrefixOf` c
+isSlapCommand (_,m) = "!slap " `isPrefixOf` m
 
 victims = tail . words
 

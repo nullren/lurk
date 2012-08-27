@@ -6,9 +6,15 @@ import Lurk.Handler
 import Lurk.Types
 import Lurk.Utils
 
+isChoose :: (String, String) -> Bool
+isChoose (nick, message) = "!c " `isPrefixOf` message
+
+randomChoice :: (String, String) -> IO (Maybe String)
+randomChoice (nick, message) = pick . (map Just) . splitOn " or " $ drop 3 message
+
 choose = msgHandler
-  { condition = isPrefixOf "!c "
-  , response = \(nick, message) -> pick . (map Just) .  splitOn " or " $ drop 3 message
+  { condition = isChoose
+  , response  = randomChoice
   }
 
 chooseHandler = handler choose
