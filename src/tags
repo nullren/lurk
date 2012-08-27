@@ -1,31 +1,36 @@
-Bot	./Lurk/Types.hs	47;"	d
-Bot	./Lurk/Types.hs	47;"	t
-BotConfig	./Lurk/Types.hs	32;"	d
-BotConfig	./Lurk/Types.hs	32;"	t
-ConnInfo	./Lurk/Types.hs	26;"	d
-ConnInfo	./Lurk/Types.hs	26;"	t
-Net	./Lurk/Types.hs	54;"	t
+Bot	./Lurk/Types.hs	49;"	d
+Bot	./Lurk/Types.hs	49;"	t
+BotConfig	./Lurk/Types.hs	34;"	d
+BotConfig	./Lurk/Types.hs	34;"	t
+ConnInfo	./Lurk/Types.hs	28;"	d
+ConnInfo	./Lurk/Types.hs	28;"	t
+Handler	./Lurk/Types.hs	58;"	d
+Handler	./Lurk/Types.hs	58;"	t
+Net	./Lurk/Types.hs	56;"	t
+act	./Lurk/Handler/Slap.hs	11;"	v	file:
 allHandlers	./Lurk/Handlers.hs	18;"	v
-channels	./Lurk/Types.hs	41;"	v
-chooseHandler	./Lurk/Handler/Choose.hs	11;"	v
-config	./Lurk/Types.hs	50;"	v
-connClose	./Lurk/Types.hs	29;"	v
-connInfo	./Lurk/Types.hs	48;"	v
-connRead	./Lurk/Types.hs	27;"	v
-connWrite	./Lurk/Types.hs	28;"	v
+build	./Lurk/Handler/Slap.hs	13;"	v	file:
+channels	./Lurk/Types.hs	43;"	v
+choose	./Lurk/Handler/Choose.hs	9;"	v	file:
+chooseHandler	./Lurk/Handler/Choose.hs	15;"	v
+condition	./Lurk/Types.hs	59;"	v
+config	./Lurk/Types.hs	52;"	v
+connClose	./Lurk/Types.hs	31;"	v
+connInfo	./Lurk/Types.hs	50;"	v
+connRead	./Lurk/Types.hs	29;"	v
+connWrite	./Lurk/Types.hs	30;"	v
 connect	./Lurk/Bot.hs	34;"	v	file:
 connectLog	./Lurk/Logger.hs	18;"	v
 connectReg	./Lurk/Connect.hs	35;"	v
 connectSsl	./Lurk/Connect.hs	21;"	v
 connect_	./Lurk/Connect.hs	17;"	v
 curl_options	./Lurk/Url.hs	17;"	v
-database	./Lurk/Types.hs	44;"	v
-db	./Lurk/Types.hs	51;"	v
+database	./Lurk/Types.hs	46;"	v
+db	./Lurk/Types.hs	53;"	v
 defaultHandlers	./Lurk/Bot/Defaults.hs	7;"	v
 defaultLurkBot	./Lurk/Bot/Defaults.hs	10;"	v
 eval	./Lurk/Handler/EverythingElse.hs	10;"	v	file:
 eval	./Lurk/Handler/Google.hs	20;"	v	file:
-eval	./Lurk/Handler/Slap.hs	9;"	v	file:
 eval	./Lurk/Handler/Urls.hs	11;"	v	file:
 extractNothing	./Lurk/Google.hs	58;"	v
 extractSbiKeywords	./Lurk/Google.hs	76;"	v
@@ -46,36 +51,45 @@ getSearchResults	./Lurk/Google.hs	52;"	v
 getTitle	./Lurk/Url.hs	26;"	v
 getUrls	./Lurk/Utils.hs	12;"	v
 googleHandler	./Lurk/Handler/Google.hs	12;"	v
-handle	./Lurk/Handler.hs	11;"	v
-handlers	./Lurk/Types.hs	42;"	v
+handle	./Lurk/Handler.hs	12;"	v
+handler	./Lurk/Handler.hs	19;"	v
+handlers	./Lurk/Types.hs	44;"	v
 head'	./Lurk/Utils.hs	18;"	v
 humanReadable	./Lurk/Utils.hs	28;"	v
+isSlapCommand	./Lurk/Handler/Slap.hs	7;"	v	file:
+justSlap	./Lurk/Handler/Slap.hs	15;"	v	file:
+kind	./Lurk/Types.hs	58;"	v
 listen	./Lurk/Bot.hs	54;"	v	file:
 listenSsl	./Lurk/Bot.hs	57;"	v	file:
 logHandler	./Lurk/Handler/Logging.hs	12;"	v
-logging	./Lurk/Types.hs	43;"	v
+logging	./Lurk/Types.hs	45;"	v
 lurkBot	lurk.hs	9;"	v	file:
 main	lurk.hs	6;"	v
 maxRedirectFollow	./Lurk/Url.hs	14;"	v
 maxSearchResults	./Lurk/Google.hs	12;"	v
 maxTitleLength	./Lurk/Url.hs	11;"	v
 miscHandler	./Lurk/Handler/EverythingElse.hs	18;"	v
-nick	./Lurk/Types.hs	33;"	v
-nickserv	./Lurk/Types.hs	39;"	v
-nickservpassword	./Lurk/Types.hs	40;"	v
+msgHandler	./Lurk/Types.hs	63;"	v
+nick	./Lurk/Types.hs	35;"	v
+nickserv	./Lurk/Types.hs	41;"	v
+nickservpassword	./Lurk/Types.hs	42;"	v
 pick	./Lurk/Utils.hs	53;"	v
-port	./Lurk/Types.hs	37;"	v
+port	./Lurk/Types.hs	39;"	v
 prettySize	./Lurk/Utils.hs	23;"	v
 privmsg	./Lurk/Bot/IRC.hs	23;"	v
-realname	./Lurk/Types.hs	35;"	v
+realname	./Lurk/Types.hs	37;"	v
+response	./Lurk/Types.hs	60;"	v
 run	./Lurk/Bot.hs	47;"	v	file:
 runBot	./Lurk/Bot.hs	28;"	v
 safeIndex	./Lurk/Utils.hs	48;"	v
-server	./Lurk/Types.hs	36;"	v
-slapHandler	./Lurk/Handler/Slap.hs	12;"	v
-ssl	./Lurk/Types.hs	38;"	v
-startTime	./Lurk/Types.hs	49;"	v
+server	./Lurk/Types.hs	38;"	v
+slap	./Lurk/Handler/Slap.hs	21;"	v	file:
+slapHandler	./Lurk/Handler/Slap.hs	26;"	v
+slapPeople	./Lurk/Handler/Slap.hs	19;"	v	file:
+ssl	./Lurk/Types.hs	40;"	v
+startTime	./Lurk/Types.hs	51;"	v
 urlHandler	./Lurk/Handler/Urls.hs	20;"	v
-username	./Lurk/Types.hs	34;"	v
+username	./Lurk/Types.hs	36;"	v
+victims	./Lurk/Handler/Slap.hs	9;"	v	file:
 write	./Lurk/Bot/IRC.hs	17;"	v
 writeLog	./Lurk/Logger.hs	9;"	v
