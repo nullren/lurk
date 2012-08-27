@@ -11,5 +11,4 @@ choose = msgHandler
   , response = \(nick, message) -> pick . (map Just) .  splitOn " or " $ drop 3 message
   }
 
-chooseHandler :: Maybe Message -> Net ()
 chooseHandler = handler choose
